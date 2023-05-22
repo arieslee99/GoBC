@@ -1,3 +1,3 @@
 # GoBC
 
-A web application that allows users to check bus and trains schedules.
+A web application that allows users to check real-time bus and trains schedules.

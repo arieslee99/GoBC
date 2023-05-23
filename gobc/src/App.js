@@ -11,7 +11,17 @@ function Schedule({routeName, direction, destination}) {
 }
 
 function UserInput() {
-
+  return (
+    <div>
+      <h1>Where would you like to go today?</h1>
+      <input id="bnum" type="text" placeholder="Bus Stop Number (e.g #58624)"></input>
+      <input id= "bname" type="text" placeholder="Route Number(e.g 403)"></input>
+      <button onClick={() => {
+        GetData();
+        return false;
+      }}>Check Schedule</button>
+    </div>
+  )
 }
 
 function GetData() {
@@ -25,6 +35,7 @@ function GetData() {
 
   useEffect(() => {
     setLoading(true);
+
     fetch('https://api.translink.ca/rttiapi/v1/stops/58624/estimates?apikey=MfbIeYyUTRdAUbp20RRP', {headers})
     .then((response) => response.json())
     .then(setData)
@@ -60,7 +71,7 @@ function App() {
   // if (!data) return null;
 
   return (
-    <GetData />
+    <UserInput />
   )
 }
 

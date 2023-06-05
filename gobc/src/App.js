@@ -1,4 +1,10 @@
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Accordion from 'react-bootstrap/Accordion';
+import { useAccordionButton } from 'react-bootstrap/AccordionButton';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+
 import { useState, useEffect } from "react";
 
 
@@ -29,9 +35,52 @@ function GetData({busStop}) {
   if (!data) return null;
 
   return (
-    <pre>{JSON.stringify(data, null, 2)}</pre>
+   //<Bus busses={data.RouteNo}/>
+   <pre>{JSON.stringify(data, null, 2)}</pre>
   )
 }
+
+function CustomToggle({ children, eventKey }) {
+  const decoratedOnClick = useAccordionButton(eventKey, () =>
+    console.log('totally custom!'),
+  );
+
+  return (
+    <Button
+      type="button"
+      style={{ backgroundColor: 'navyblue' }}
+      onClick={decoratedOnClick}
+    >
+      {children}
+    </Button>
+  );
+}
+
+function Example() {
+  return (
+    <Accordion defaultActiveKey="0" style={{backgroundColor: "white"}}>
+      <Card style={{border: "none"}}>
+        <Card.Header style={{border: "none"}}>
+          <CustomToggle eventKey="0">Bus Stop Number</CustomToggle>
+        </Card.Header>
+        <Accordion.Collapse eventKey="0">
+          <Card.Body>
+            Bus stop information
+            </Card.Body>
+        </Accordion.Collapse>
+      </Card>
+      <Card style={{border: "none"}}>
+        <Card.Header style={{border: "none"}}>
+          <CustomToggle eventKey="1">Bus Id</CustomToggle>
+        </Card.Header>
+        <Accordion.Collapse eventKey="1">
+          <Card.Body>Hello! I'm another body</Card.Body>
+        </Accordion.Collapse>
+      </Card>
+    </Accordion>
+  );
+}
+
 
 function App() {
   //58624
@@ -45,15 +94,19 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setUpdated(input);
+
   };
 
   return (
     <div>
-      <h1 className='App'>Where would you like to go today?</h1>
-      <form className='App'  onSubmit={handleSubmit}>
+      <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
+      
+      <Example />
+
+    <form className='FormTraits' onSubmit={handleSubmit}>
         <input id="bnum" type="text" value={input} placeholder="Bus Stop Number" onChange={handleChange} />
         <input type="submit" value="Check Schedule"/> 
-      </form>
+    </form>
       <GetData busStop={updated}/>
     </div>
 

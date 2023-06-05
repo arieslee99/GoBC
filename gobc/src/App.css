@@ -1,6 +1,17 @@
 .App {
   text-align: center;
+  font-weight: bold;
+  color: midnightblue;
+  font-size: 75px;
+  padding: 20px;
 }
+
+.FormTraits {
+  text-align: center;
+  font-size: 20px;
+  padding: 20px;
+}
+
 
 .App-logo {
   height: 40vmin;

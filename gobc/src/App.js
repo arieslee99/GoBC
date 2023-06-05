@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import { GoogleMap, useLoadScript} from '@react-google-maps/api';
 import { useMemo} from 'react';
+import GoogleMapReact from 'google-map-react';
 
 import { useState, useEffect } from "react";
 
@@ -114,24 +115,36 @@ function SearchOptions() {
 
 function App() {
   //58624
-  const {maploaded} = useLoadScript ( {
-    googleMapsApiKey: 'AIzaSyDoTbWrdgYZ6h-zGuq8TFVi-kDKBHbkHEw'
-  });
+  // const {maploaded} = useLoadScript ( {
+  //   googleMapsApiKey: 'AIzaSyDoTbWrdgYZ6h-zGuq8TFVi-kDKBHbkHEw'
+  // });
 
-  const center = useMemo(() => ({ lat: 18.52043, lng: 73.856743 }), []);
+  // const center = useMemo(() => ({ lat: 18.52043, lng: 73.856743 }), []);
+  const location = {
+    address: '1600 Amphitheatre Parkway, Mountain View, california.',
+    lat: 37.42216,
+    lng: -122.08427,
+  }
 
   return (
 
     <div>
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
-      {!maploaded ? <Spinner animation="grow"/> : 
+      {/* {!maploaded ? <Spinner animation="grow"/> : 
        
-        <GoogleMap 
-          mapContainerClassName="MapContainer"
-          zoom={10}
-          center={center}
+        <GoogleMapReact
+          bootstrapURLKeys={{key: 'AIzaSyDoTbWrdgYZ6h-zGuq8TFVi-kDKBHbkHEw' }}
+          defaultCenter= {location}
+          defaultZoom={10}
         />
-      }
+      } */}
+      <div>
+        <GoogleMapReact
+          bootstrapURLKeys={{key: 'AIzaSyDoTbWrdgYZ6h-zGuq8TFVi-kDKBHbkHEw' }}
+          defaultCenter= {location}
+          defaultZoom={10}>
+        </GoogleMapReact>
+        </div>
 
       <SearchOptions />
 

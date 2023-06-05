@@ -4,6 +4,9 @@ import Accordion from 'react-bootstrap/Accordion';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
+import { GoogleMap, useLoadScript} from '@react-google-maps/api';
+import { useMemo} from 'react';
 
 import { useState, useEffect } from "react";
 
@@ -30,7 +33,7 @@ function GetData({busStop}) {
     .catch(setError);
   }, [busStop]);
   
-  if (loading) return <h1>Loading Data</h1>
+  if (loading) return <Spinner animation="grow"/>
   if (error) return <pre>{JSON.stringify(error)}</pre>
   if (!data) return null;
 
@@ -48,6 +51,7 @@ function CustomToggle({ children, eventKey }) {
   return (
     <Button
       type="button"
+      size="lg"
       style={{ backgroundColor: 'navyblue' }}
       onClick={decoratedOnClick}
     >
@@ -56,17 +60,43 @@ function CustomToggle({ children, eventKey }) {
   );
 }
 
-function Example() {
+function ByBusStop() {
+  const [input, setInput] = useState('');
+  const [updated, setUpdated] = useState(input);
+
+  const handleChange = (event) => {
+    setInput(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setUpdated(input);
+
+  };
+
   return (
-    <Accordion defaultActiveKey="0" style={{backgroundColor: "white"}}>
+    <div>
+    <form className='FormTraits' onSubmit={handleSubmit}>
+        <p>Enter Bus Stop number:</p>
+        <input style={{borderRadius: "7px", marginRight: "15px", padding: "8px"}} size="lg" id="bnum" type="text" value={input} placeholder="Bus Stop Number" onChange={handleChange} />
+        <Button style={{backgroundColor: "navyblue", border: "none", padding: "8px"}}type="submit">Check Schedule</Button>
+    </form>
+      <GetData busStop={updated}/>
+    </div>
+  )
+}
+
+function SearchOptions() {
+  return (
+    <Accordion defaultActiveKey="0">
       <Card style={{border: "none"}}>
         <Card.Header style={{border: "none"}}>
           <CustomToggle eventKey="0">Bus Stop Number</CustomToggle>
         </Card.Header>
         <Accordion.Collapse eventKey="0">
           <Card.Body>
-            Bus stop information
-            </Card.Body>
+            <ByBusStop />
+          </Card.Body>
         </Accordion.Collapse>
       </Card>
       <Card style={{border: "none"}}>
@@ -84,32 +114,28 @@ function Example() {
 
 function App() {
   //58624
-  const [input, setInput] = useState('');
-  const [updated, setUpdated] = useState(input);
+  const {maploaded} = useLoadScript ( {
+    googleMapsApiKey: 'AIzaSyDoTbWrdgYZ6h-zGuq8TFVi-kDKBHbkHEw'
+  });
 
-  const handleChange = (event) => {
-    setInput(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setUpdated(input);
-
-  };
+  const center = useMemo(() => ({ lat: 18.52043, lng: 73.856743 }), []);
 
   return (
+
     <div>
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
-      
-      <Example />
+      {!maploaded ? <Spinner animation="grow"/> : 
+       
+        <GoogleMap 
+          mapContainerClassName="MapContainer"
+          zoom={10}
+          center={center}
+        />
+      }
 
-    <form className='FormTraits' onSubmit={handleSubmit}>
-        <input id="bnum" type="text" value={input} placeholder="Bus Stop Number" onChange={handleChange} />
-        <input type="submit" value="Check Schedule"/> 
-    </form>
-      <GetData busStop={updated}/>
+      <SearchOptions />
+
     </div>
-
 
   )
 }

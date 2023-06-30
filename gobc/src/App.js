@@ -5,11 +5,30 @@ import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import { GoogleMap, useLoadScript} from '@react-google-maps/api';
-import { useMemo} from 'react';
-import GoogleMapReact from 'google-map-react';
-
 import { useState, useEffect } from "react";
+
+function Schedule({schedule}) {
+  var obj = JSON.parse(JSON.stringify(schedule)); 
+  //console.log(obj[0].Schedules[0].ExpectedLeaveTime);
+
+  const busses = [];
+  for(let i = 0; i < obj.length; i++) {
+    busses.push(
+    <ul>{obj[i].RouteNo}: {obj[i].RouteName}
+      <ul>
+        Departure Times: {obj[i].Schedules[i].ExpectedLeaveTime}
+      </ul>
+    </ul>
+    );
+  }
+
+  return (
+    <ul>
+      {busses}
+    </ul>
+  )
+}
+
 
 
 function GetData({busStop}) {
@@ -36,12 +55,22 @@ function GetData({busStop}) {
   
   if (loading) return <Spinner animation="grow"/>
   if (error) return <pre>{JSON.stringify(error)}</pre>
-  if (!data) return null;
+  if (!data) return null; 
 
   return (
-   //<Bus busses={data.RouteNo}/>
-   <pre>{JSON.stringify(data, null, 2)}</pre>
+    <Schedule schedule={data}/>
   )
+
+  
+  // return (
+  // //<pre>{JSON.stringify(data, null, 2)}</pre>
+  // <p>Please enter a valid 5 digit bus stop number.</p>
+
+  // // //<p>{scheduleObj[0].Schedules[0].ExpectedLeaveTime}</p>
+
+  // //<Schedule schedule={data} />
+  
+  // )
 }
 
 function CustomToggle({ children, eventKey }) {
@@ -115,37 +144,12 @@ function SearchOptions() {
 
 function App() {
   //58624
-  // const {maploaded} = useLoadScript ( {
-  //   googleMapsApiKey: 'AIzaSyDoTbWrdgYZ6h-zGuq8TFVi-kDKBHbkHEw'
-  // });
-
-  // const center = useMemo(() => ({ lat: 18.52043, lng: 73.856743 }), []);
-  const location = {
-    address: '1600 Amphitheatre Parkway, Mountain View, california.',
-    lat: 37.42216,
-    lng: -122.08427,
-  }
 
   return (
 
     <div>
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
-      {/* {!maploaded ? <Spinner animation="grow"/> : 
-       
-        <GoogleMapReact
-          bootstrapURLKeys={{key: 'AIzaSyDoTbWrdgYZ6h-zGuq8TFVi-kDKBHbkHEw' }}
-          defaultCenter= {location}
-          defaultZoom={10}
-        />
-      } */}
-      <div>
-        <GoogleMapReact
-          bootstrapURLKeys={{key: 'AIzaSyDoTbWrdgYZ6h-zGuq8TFVi-kDKBHbkHEw' }}
-          defaultCenter= {location}
-          defaultZoom={10}>
-        </GoogleMapReact>
-        </div>
-
+    
       <SearchOptions />
 
     </div>

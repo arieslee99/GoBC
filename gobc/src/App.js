@@ -9,17 +9,22 @@ import { useState, useEffect } from "react";
 
 function Schedule({schedule}) {
   var obj = JSON.parse(JSON.stringify(schedule)); 
+  //console.log(obj[0].Schedules.length);
   //console.log(obj[0].Schedules[0].ExpectedLeaveTime);
 
   const busses = [];
   for(let i = 0; i < obj.length; i++) {
-    busses.push(
-    <ul>{obj[i].RouteNo}: {obj[i].RouteName}
-      <ul>
-        Departure Times: {obj[i].Schedules[i].ExpectedLeaveTime}
-      </ul>
+    busses.push (<ul style={{backgroundColor: "lightyellow", fontWeight: "bold"}}>
+      {obj[i].RouteNo}: {obj[i].RouteName}
     </ul>
-    );
+    )
+    for(let j = 0; j < obj[i].Schedules.length; j++) {
+      busses.push(
+          <ul>
+            Departure Times: {obj[i].Schedules[j].ExpectedLeaveTime}
+          </ul>
+      )
+    }
   }
 
   return (
@@ -58,19 +63,20 @@ function GetData({busStop}) {
   if (!data) return null; 
 
   return (
+    //<pre>{JSON.stringify(data, null, 2)}</pre>
     <Schedule schedule={data}/>
   )
 
   
   // return (
-  // //<pre>{JSON.stringify(data, null, 2)}</pre>
-  // <p>Please enter a valid 5 digit bus stop number.</p>
+  // <pre>{JSON.stringify(data, null, 2)}</pre>
+  //<p>Please enter a valid 5 digit bus stop number.</p>
 
-  // // //<p>{scheduleObj[0].Schedules[0].ExpectedLeaveTime}</p>
+  // //<p>{scheduleObj[0].Schedules[0].ExpectedLeaveTime}</p>
 
-  // //<Schedule schedule={data} />
+  //<Schedule schedule={data} />
   
-  // )
+  
 }
 
 function CustomToggle({ children, eventKey }) {

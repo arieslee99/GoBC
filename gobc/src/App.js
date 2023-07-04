@@ -104,13 +104,22 @@ function Bus({scheduleArray}) {
 
 function CalculateTime({nextBus}) {
   let today = new Date();
-  let time = today.getHours() + ":" + today.getMinutes(); 
+  let timeDiff = 0;
+  const time = today.getHours() + today.getMinutes(); 
   let nextBusTime = nextBus.substring(0,5);
 
-  
+  if(nextBusTime.substring(0,2) === 12) {
+    nextBusTime = 1 + nextBus.substring(3,5);
+  }
+
+  if(today.getHours() > nextBusTime.substring(0,2)) {
+    timeDiff = time - nextBus.replace(":","");
+  } else {
+    timeDiff = nextBus.replace(":","") - time;
+  }
 
   return (
-    "Leaving in " + time + " minutes"
+    "Leaving in " + timeDiff + " minutes"
   )
 
 }

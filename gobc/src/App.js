@@ -8,31 +8,11 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useState, useEffect } from "react";
 import Badge from 'react-bootstrap/Badge';
 import ListGroup from 'react-bootstrap/ListGroup';
-import ListGroupItem from 'react-bootstrap/esm/ListGroupItem';
 
 function Schedule({schedule}) {
   const obj = JSON.parse(JSON.stringify(schedule)); 
-  ///.log(obj.length);
-  // const busses = [];
-  // for(let i = 0; i < obj.length; i++) {
-  //   busses.push (
-  //   <ul style={{backgroundColor: "lightyellow", fontWeight: "bold"}}>
-  //     {obj[i].RouteNo}: {obj[i].RouteName}
-  //   </ul>
-  //   )
-  //   for(let j = 0; j < obj[i].Schedules.length; j++) {
-  //     busses.push(
-  //         <ul>
-  //           Departure Times: {obj[i].Schedules[j].ExpectedLeaveTime}
-  //         </ul>
-  //     )
-  //   }
-  // }
 
   return (
-    // <ul>
-    //   {busses}
-    // </ul>
     <ListGroup variant="info"> 
       <BusTabs busses= {obj}/>
     </ListGroup>
@@ -92,34 +72,47 @@ function BusTabs({busses}) {
     busTimes.push(
     <ListGroup.Item as="li" classname="d-flex justify-content-between align-items-start">
       <div className="ms-2 me-auto">
-        <div className="fw-bold">{busses[i].RouteNo}: {busses[i].RouteName}</div>
+        <div style={{fontSize: 15}}className="fw-bold">{busses[i].RouteNo}: {busses[i].RouteName}
+          <Badge style={{fontSize: 13, marginLeft: "10px", color: "black"}} bg="warning" pill>
+            <CalculateTime nextBus={busses[i].Schedules[0].ExpectedLeaveTime}/>
+          </Badge>     
+        </div>
+
         <Bus scheduleArray={busses[i].Schedules} />
       </div>
-      <Badge style={{fontSize: 15, backgroundColor: "green"}}bg="primary" pill>
-        Leaving in 14 minutes
-      </Badge>
     </ListGroup.Item>
   )}
-console.log(busTimes);
   return busTimes;
 }
 
 function Bus({scheduleArray}) {
-  console.log("in bus");
   const busTimes = [];
   for(let i = 0; i < scheduleArray.length; i++) {
+    let str = scheduleArray[i].ExpectedLeaveTime;
+    
     busTimes.push(
-      <ul>
-        {scheduleArray[i].ExpectedLeaveTime}
-      </ul>
+      <ListGroup.Item action variant="light" style={{marginRight: 5, marginLeft: 5}}>
+        {str.substring(0,7)}</ListGroup.Item>
     )
   }
+  return (
+    <ListGroup horizontal="sm" style={{padding: "10px"}}>
+      {busTimes}
+    </ListGroup>
+  )
+}
+
+function CalculateTime({nextBus}) {
+  let today = new Date();
+  let time = today.getHours() + ":" + today.getMinutes(); 
+  let nextBusTime = nextBus.substring(0,5);
+
+  
 
   return (
-    <ul>
-      {busTimes}
-    </ul>
+    "Leaving in " + time + " minutes"
   )
+
 }
 
 function CustomToggle({ children, eventKey }) {
@@ -195,12 +188,9 @@ function App() {
   //58624
 
   return (
-
     <div>
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
-    
       <SearchOptions />
-
     </div>
 
   )

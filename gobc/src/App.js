@@ -102,9 +102,17 @@ function Bus({scheduleArray}) {
 
 function CalculateTime({nextBus}) {
   let today = new Date();
+  
   const mins = today.getMinutes();
-  const nextBusTime = nextBus.substring(2,4);
-  let diff;
+  let nextBusTime;
+
+  if(nextBus.length === 7) {
+    nextBusTime = nextBus.substring(3,5);
+  } else {
+    nextBusTime = nextBus.substring(2,5);
+  }
+
+  let diff = 0;
   if(mins >= nextBusTime) {
     diff = mins - nextBusTime;
   } else {

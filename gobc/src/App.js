@@ -8,6 +8,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useState, useEffect } from "react";
 import Badge from 'react-bootstrap/Badge';
 import ListGroup from 'react-bootstrap/ListGroup';
+import { BsFillArrowRightCircleFill } from "react-icons/bs";
 
 function Schedule({schedule}) {
   const obj = JSON.parse(JSON.stringify(schedule)); 
@@ -57,7 +58,11 @@ function BusTabs({busses}) {
     busTimes.push(
     <ListGroup.Item as="li" className="d-flex justify-content-between align-items-start">
       <div className="ms-2 me-auto">
-        <div style={{fontSize: 15}}className="fw-bold">{busses[i].RouteNo}: {busses[i].RouteName}
+        <div style={{fontSize: 15}}className="fw-bold">
+          <h1>{busses[i].RouteNo}</h1>
+          <BsFillArrowRightCircleFill />
+          {busses[i].Schedules[i].Destination}
+          {/* {busses[i].RouteNo}: {busses[i].RouteName} */}
           <Badge style={{fontSize: 13, marginLeft: "10px", color: "black"}} bg="warning" pill>
             <CalculateTime nextBus={busses[i].Schedules[0].ExpectedLeaveTime}/>
           </Badge>     
@@ -96,11 +101,16 @@ function CalculateTime({nextBus}) {
   if(nextBus.length === 7) {
     nextBusTime = nextBus.substring(3,5);
   } else {
-    nextBusTime = nextBus.substring(2,5);
+    nextBusTime = nextBus.substring(2,4);
   }
 
+  console.log(nextBusTime);
   let diff = 0;
-  if(mins >= nextBusTime) {
+  if(mins === "00") {
+    diff = 60 - nextBusTime;
+  } else if (nextBusTime === "00") {
+    diff = 60 - mins;
+  } else if (mins >= nextBusTime) {
     diff = mins - nextBusTime;
   } else {
     diff = nextBusTime - mins;
@@ -192,17 +202,6 @@ function CurrentLocation() {
   }
 }
 
-// function success(position) {
-//   const latitude = position.coords.latitude;
-//   const longitude = position.coords.longitude;
-
-//   console.log(latitude + longitude);
-// }
-
-// function error() {
-//   console.log("can't get location");
-// }
-
 
 function App() {
   //58624
@@ -211,6 +210,7 @@ function App() {
     <div>
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
       <CurrentLocation />
+     
       <SearchOptions />
     </div>
 

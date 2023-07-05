@@ -19,8 +19,6 @@ function Schedule({schedule}) {
   )
 }
 
-
-
 function GetData({busStop}) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -51,17 +49,6 @@ function GetData({busStop}) {
     //<pre>{JSON.stringify(data, null, 2)}</pre>
     <Schedule schedule={data}/>
   )
-
-  
-  // return (
-  // <pre>{JSON.stringify(data, null, 2)}</pre>
-  //<p>Please enter a valid 5 digit bus stop number.</p>
-
-  // //<p>{scheduleObj[0].Schedules[0].ExpectedLeaveTime}</p>
-
-  //<Schedule schedule={data} />
-  
-  
 }
 
 function BusTabs({busses}) {
@@ -122,7 +109,6 @@ function CalculateTime({nextBus}) {
   return (
     "Leaving in " + diff + " minutes"
   )
-
 }
 
 function CustomToggle({ children, eventKey }) {
@@ -193,6 +179,30 @@ function SearchOptions() {
   );
 }
 
+function CurrentLocation() {
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      console.log(latitude);
+      console.log(longitude);
+    })
+  } else {
+    console.log("geolocation not available"); 
+  }
+}
+
+// function success(position) {
+//   const latitude = position.coords.latitude;
+//   const longitude = position.coords.longitude;
+
+//   console.log(latitude + longitude);
+// }
+
+// function error() {
+//   console.log("can't get location");
+// }
+
 
 function App() {
   //58624
@@ -200,10 +210,10 @@ function App() {
   return (
     <div>
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
+      <CurrentLocation />
       <SearchOptions />
     </div>
 
   )
 }
-
 export default App;

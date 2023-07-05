@@ -8,7 +8,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useState, useEffect } from "react";
 import Badge from 'react-bootstrap/Badge';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { BsFillArrowRightCircleFill } from "react-icons/bs";
+import { BsFillArrowRightCircleFill, BsArrowLeftRight} from "react-icons/bs";
 
 function Schedule({schedule}) {
   const obj = JSON.parse(JSON.stringify(schedule)); 
@@ -60,12 +60,18 @@ function BusTabs({busses}) {
       <div className="ms-2 me-auto">
         <div style={{fontSize: 15}}className="fw-bold">
           <h1>{busses[i].RouteNo}</h1>
-          <BsFillArrowRightCircleFill />
-          {busses[i].Schedules[i].Destination}
-          {/* {busses[i].RouteNo}: {busses[i].RouteName} */}
-          <Badge style={{fontSize: 13, marginLeft: "10px", color: "black"}} bg="warning" pill>
-            <CalculateTime nextBus={busses[i].Schedules[0].ExpectedLeaveTime}/>
-          </Badge>     
+
+          <div style={{padding: "5px"}}>
+            <BsFillArrowRightCircleFill style={{marginRight: 5}}/>
+            {busses[i].Schedules[i].Destination}
+            <Badge style={{fontSize: 13, marginLeft: "10px", color: "black"}} bg="warning" pill>
+              <CalculateTime nextBus={busses[i].Schedules[0].ExpectedLeaveTime}/>
+            </Badge>
+          </div>
+
+          <BsArrowLeftRight style={{marginRight: 5}}/>
+          {busses[i].RouteName}
+          
         </div>
 
         <Bus scheduleArray={busses[i].Schedules} />
@@ -104,7 +110,6 @@ function CalculateTime({nextBus}) {
     nextBusTime = nextBus.substring(2,4);
   }
 
-  console.log(nextBusTime);
   let diff = 0;
   if(mins === "00") {
     diff = 60 - nextBusTime;

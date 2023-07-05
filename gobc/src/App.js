@@ -65,12 +65,10 @@ function GetData({busStop}) {
 }
 
 function BusTabs({busses}) {
-  console.log(busses.length);
-
   let busTimes = [];
   for(let i = 0; i < busses.length; i++) {
     busTimes.push(
-    <ListGroup.Item as="li" classname="d-flex justify-content-between align-items-start">
+    <ListGroup.Item as="li" className="d-flex justify-content-between align-items-start">
       <div className="ms-2 me-auto">
         <div style={{fontSize: 15}}className="fw-bold">{busses[i].RouteNo}: {busses[i].RouteName}
           <Badge style={{fontSize: 13, marginLeft: "10px", color: "black"}} bg="warning" pill>
@@ -104,22 +102,17 @@ function Bus({scheduleArray}) {
 
 function CalculateTime({nextBus}) {
   let today = new Date();
-  let timeDiff = 0;
-  const time = today.getHours() + today.getMinutes(); 
-  let nextBusTime = nextBus.substring(0,5);
-
-  if(nextBusTime.substring(0,2) === 12) {
-    nextBusTime = 1 + nextBus.substring(3,5);
-  }
-
-  if(today.getHours() > nextBusTime.substring(0,2)) {
-    timeDiff = time - nextBus.replace(":","");
+  const mins = today.getMinutes();
+  const nextBusTime = nextBus.substring(2,4);
+  let diff;
+  if(mins >= nextBusTime) {
+    diff = mins - nextBusTime;
   } else {
-    timeDiff = nextBus.replace(":","") - time;
+    diff = nextBusTime - mins;
   }
 
   return (
-    "Leaving in " + timeDiff + " minutes"
+    "Leaving in " + diff + " minutes"
   )
 
 }

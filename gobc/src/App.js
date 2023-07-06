@@ -102,24 +102,33 @@ function CalculateTime({nextBus}) {
   let today = new Date();
   
   let mins = today.getMinutes();
-  let nextBusTime;
+  let hours = today.getHours() - 12;
+  let nextBusMins;
+  let nextBusHours;
 
   if(nextBus.length === 7) {
-    nextBusTime = nextBus.substring(3,5);
+    nextBusMins = nextBus.substring(3,5);
+    nextBusHours = nextBus.substring(0,2);
   } else {
-    nextBusTime = nextBus.substring(2,4);
+    nextBusMins = nextBus.substring(2,4);
+    nextBusHours = nextBus.substring(0,1);
   }
 
   let diff;
-
-  if(Array.from(mins)[0] === 0 && Array.from(nextBusTime)[0] === 0) {
-    diff = (Math.max(Array.from(nextBusTime)[1], Array.from(mins)[1])) - (Math.min(Array.from(nextBusTime)[1], Array.from(mins)[1]));
-  } else if (Array.from(mins)[0] === 0) {
-    diff = nextBusTime - Array.from(mins)[1];
-  } else if (Array.from(nextBusTime)[0] === 0){
-    diff = mins - Array.from(nextBusTime)[1];
+ 
+  if(nextBusHours.toString() === hours.toString()) {
+    if(Array.from(mins)[0] === 0 && Array.from(nextBusMins)[0] === 0) {
+      diff = (Math.max(Array.from(nextBusMins)[1], Array.from(mins)[1])) - (Math.min(Array.from(nextBusMins)[1], Array.from(mins)[1]));
+    } else if (Array.from(mins)[0] === 0) {
+      diff = nextBusMins - Array.from(mins)[1];
+    } else if (Array.from(nextBusMins)[0] === 0){
+      diff = mins - Array.from(nextBusMins)[1];
+    } else {
+      diff = (Math.max(mins, nextBusMins)) - (Math.min(mins, nextBusMins));
+    }
   } else {
-    diff = (Math.max(mins, nextBusTime)) - (Math.min(mins, nextBusTime));
+      let x = 60 - (Math.max(mins, nextBusMins));
+      diff = x + (Math.min(mins, nextBusMins));
   }
   
   return (
@@ -207,7 +216,6 @@ function CurrentLocation() {
     console.log("geolocation not available"); 
   }
 }
-
 
 function App() {
   //58624

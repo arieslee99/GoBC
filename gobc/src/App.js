@@ -101,7 +101,7 @@ function Bus({scheduleArray}) {
 function CalculateTime({nextBus}) {
   let today = new Date();
   
-  const mins = today.getMinutes();
+  let mins = today.getMinutes();
   let nextBusTime;
 
   if(nextBus.length === 7) {
@@ -110,17 +110,18 @@ function CalculateTime({nextBus}) {
     nextBusTime = nextBus.substring(2,4);
   }
 
-  let diff = 0;
-  if(mins === "00") {
-    diff = 60 - nextBusTime;
-  } else if (nextBusTime === "00") {
-    diff = 60 - mins;
-  } else if (mins >= nextBusTime) {
-    diff = mins - nextBusTime;
-  } else {
-    diff = nextBusTime - mins;
-  }
+  let diff;
 
+  if(Array.from(mins)[0] === 0 && Array.from(nextBusTime)[0] === 0) {
+    diff = (Math.max(Array.from(nextBusTime)[1], Array.from(mins)[1])) - (Math.min(Array.from(nextBusTime)[1], Array.from(mins)[1]));
+  } else if (Array.from(mins)[0] === 0) {
+    diff = nextBusTime - Array.from(mins)[1];
+  } else if (Array.from(nextBusTime)[0] === 0){
+    diff = mins - Array.from(nextBusTime)[1];
+  } else {
+    diff = (Math.max(mins, nextBusTime)) - (Math.min(mins, nextBusTime));
+  }
+  
   return (
     "Leaving in " + diff + " minutes"
   )
@@ -215,7 +216,6 @@ function App() {
     <div>
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
       <CurrentLocation />
-     
       <SearchOptions />
     </div>
 

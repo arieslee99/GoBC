@@ -65,7 +65,7 @@ function BusTabs({busses}) {
 
           <div style={{padding: "5px"}}>
             <BsFillArrowRightCircleFill style={{marginRight: 5}}/>
-            {/* {busses[i].Schedules[i].Destination} */}
+            {busses[i].Schedules[i].Destination}
             <Badge style={{fontSize: 13, marginLeft: "10px", color: "black"}} bg="warning" pill>
               <CalculateTime nextBus={busses[i].Schedules[0].ExpectedLeaveTime}/>
             </Badge>
@@ -207,34 +207,39 @@ function SearchOptions() {
 }
 
 function CurrentLocation() {
+
+  const [lat, setLat] = useState(null);
+  const [long, setLong] = useState(null);
+
   if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-
+      navigator.geolocation.getCurrentPosition((position) => {
+      setLat(position.coords.latitude);
+      setLong(position.coords.longitude);
       
-      return <RenderGoogleMap />; 
-    
-    })
+    });
   } else {
     console.log("geolocation not available"); 
   }
+
+  return (
+    <RenderGoogleMap lat={lat} long={long}/>
+  )
+
 }
 
-function RenderGoogleMap() {
+function RenderGoogleMap({lat, long}) {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
 
   if(!isLoaded) return <div>loading</div>;
-  return <Map />; 
+  return <Map latitude={lat} longitude={long} />; 
 }
 
-function Map() {
+function Map({latitude, longitude}) {
   const center = useMemo(() => ({
-    lat: -34.397, lng: 150.644,
-  }), []);
+    lat: latitude, lng: longitude,
+  }), [latitude, longitude]);
 
   return (
     <GoogleMap 
@@ -253,7 +258,7 @@ function App() {
   return (
     <div>
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
-      <RenderGoogleMap />
+      <CurrentLocation />
       <SearchOptions />
     </div>
 

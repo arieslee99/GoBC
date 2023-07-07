@@ -13,9 +13,9 @@
   padding: 20px;
 }
 
-.MapContainer {
-  height: 100%;
-  width: 100%;
+.map-container {
+  height: 70vh;
+  width: 50%;
 }
 
 

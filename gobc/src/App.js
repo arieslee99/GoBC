@@ -5,10 +5,11 @@ import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Badge from 'react-bootstrap/Badge';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { BsFillArrowRightCircleFill, BsArrowLeftRight} from "react-icons/bs";
+import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 
 function Schedule({schedule}) {
   const obj = JSON.parse(JSON.stringify(schedule)); 
@@ -33,6 +34,7 @@ function GetData({busStop}) {
     setLoading(true);
     const BASE_URL = "https://api.translink.ca"
     const SEARCH_PATH = busStop;
+ 
     let FINAL_URL = `${BASE_URL}/rttiapi/v1/stops/${SEARCH_PATH}/estimates?apikey=MfbIeYyUTRdAUbp20RRP`;
 
     fetch(FINAL_URL, {headers}) 
@@ -63,7 +65,7 @@ function BusTabs({busses}) {
 
           <div style={{padding: "5px"}}>
             <BsFillArrowRightCircleFill style={{marginRight: 5}}/>
-            {busses[i].Schedules[i].Destination}
+            {/* {busses[i].Schedules[i].Destination} */}
             <Badge style={{fontSize: 13, marginLeft: "10px", color: "black"}} bg="warning" pill>
               <CalculateTime nextBus={busses[i].Schedules[0].ExpectedLeaveTime}/>
             </Badge>
@@ -114,7 +116,7 @@ function CalculateTime({nextBus}) {
     nextBusHours = nextBus.substring(0,1);
   }
 
-  let diff;
+  let diff = 0;
  
   if(nextBusHours.toString() === hours.toString()) {
     if(Array.from(mins)[0] === 0 && Array.from(nextBusMins)[0] === 0) {
@@ -207,15 +209,43 @@ function SearchOptions() {
 function CurrentLocation() {
   if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
+
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
-      console.log(latitude);
-      console.log(longitude);
+
+      
+      return <RenderGoogleMap />; 
+    
     })
   } else {
     console.log("geolocation not available"); 
   }
 }
+
+function RenderGoogleMap() {
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+  });
+
+  if(!isLoaded) return <div>loading</div>;
+  return <Map />; 
+}
+
+function Map() {
+  const center = useMemo(() => ({
+    lat: -34.397, lng: 150.644,
+  }), []);
+
+  return (
+    <GoogleMap 
+      zoom={20}
+      center={center}
+      mapContainerClassName="map-container"
+    >
+      <MarkerF position={center} />
+    </GoogleMap>
+
+)}
 
 function App() {
   //58624
@@ -223,7 +253,7 @@ function App() {
   return (
     <div>
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
-      <CurrentLocation />
+      <RenderGoogleMap />
       <SearchOptions />
     </div>
 

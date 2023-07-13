@@ -34,7 +34,6 @@ function GetData({busStop}) {
     setLoading(true);
     const BASE_URL = "https://api.translink.ca"
     const SEARCH_PATH = busStop;
- 
     let FINAL_URL = `${BASE_URL}/rttiapi/v1/stops/${SEARCH_PATH}/estimates?apikey=MfbIeYyUTRdAUbp20RRP`;
 
     fetch(FINAL_URL, {headers}) 
@@ -229,7 +228,7 @@ function CurrentLocation() {
 
 function RenderGoogleMap({lat, long}) {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
 
   if(!isLoaded) return <div>loading</div>;

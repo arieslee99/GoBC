@@ -10,8 +10,7 @@ import { useState } from "react";
 
 
 function CustomToggle({ children, eventKey }) {
-  const decoratedOnClick = useAccordionButton(eventKey, () =>
-    console.log('totally custom!'),
+  const decoratedOnClick = useAccordionButton(eventKey
   );
 
   return (
@@ -48,7 +47,6 @@ function ByBusStop() {
         <Button style={{backgroundColor: "navyblue", border: "none", padding: "8px"}}type="submit">Check Schedule</Button>
     </form>
       <RenderBusses stop={updated} />
-      {/* <GetData busStop={updated}/> */}
     </div>
   )
 }

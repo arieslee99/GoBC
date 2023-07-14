@@ -101,17 +101,20 @@ function GetData({busStop}) {
     if(hours > 12) {
       hours -= 12;
     } 
+
     let nextBusMins;
     let nextBusHours;
   
-    if(nextBus.length === 7) {
+    if(nextBus.toString().length === 18 || nextBus.toString().length === 7) {
+      nextBus = nextBus.substring(0, 8);
       nextBusMins = nextBus.substring(3,5);
       nextBusHours = nextBus.substring(0,2);
     } else {
+      nextBus = nextBus.substring(0, 7);
       nextBusMins = nextBus.substring(2,4);
       nextBusHours = nextBus.substring(0,1);
     }
-  
+
     let diff;
     if(nextBusHours.toString() === hours.toString()) {
       if(Array.from(mins)[0] === 0 && Array.from(nextBusMins)[0] === 0) {

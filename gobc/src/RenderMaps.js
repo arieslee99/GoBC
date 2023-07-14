@@ -53,6 +53,9 @@ function Map({latitude, longitude}) {
 )}
 
 // function CurrentLocationSched({CurrentLocation}) {
+//   const map = new google.maps.Map(
+//     document.getElementById("map") 
+//   )
 //   let axios = require('axios');
 //   let config = {
 //     method: 'get',
@@ -68,6 +71,10 @@ function Map({latitude, longitude}) {
 //   .catch(function(error) {
 //     console.log(error);
 //   });
+
+//   return (
+//     "hello"
+//   )
 // }
 
 function RenderMaps() {

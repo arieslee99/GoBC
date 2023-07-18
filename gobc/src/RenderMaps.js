@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect} from "react";
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 
 function CurrentLocation() {
@@ -40,42 +40,40 @@ function Map({latitude, longitude}) {
   return (
     <div>
       <GoogleMap 
-      zoom={20}
+      zoom={18}
       center={center}
       mapContainerClassName="map-container"
     >
       <MarkerF position={center} />
     </GoogleMap>
 
-    {/* <CurrentLocationSched CurrentLocation={center}/> */}
+    <CurrentLocationSched CurrentLocation={center}/>
 
     </div>
 )}
 
-// function CurrentLocationSched({CurrentLocation}) {
-//   const map = new google.maps.Map(
-//     document.getElementById("map") 
-//   )
-//   let axios = require('axios');
-//   let config = {
-//     method: 'get',
-//     url: 
-//     `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${CurrentLocation.lat}%2C${CurrentLocation.lng}&radius=1500&type=restaurant&keyword=cruise&key=${process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`,
-//     headers: {}
-//   };
+function CurrentLocationSched({CurrentLocation}) {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
-//   axios(config)
-//   .then(function(response) {
-//     console.log(JSON.stringify(response.data));
-//   })
-//   .catch(function(error) {
-//     console.log(error);
-//   });
+  
+  useEffect(() => {
 
-//   return (
-//     "hello"
-//   )
-// }
+    let URL = 
+    `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${CurrentLocation.lat}%2C${CurrentLocation.lng}&radius=500&type=transit_station&key=${process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`;
+
+    fetch(URL)
+    .then((response) => response.json())
+    .then(setData)
+    .catch(setError);
+  }, [CurrentLocation]);
+
+  if(error) return <pre>{JSON.stringify(error)}</pre>
+
+  return(
+    <pre>{JSON.stringify(data, null, 2)}</pre>
+  )
+}
 
 function RenderMaps() {
   return (

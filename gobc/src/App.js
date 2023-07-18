@@ -10,9 +10,7 @@ import { useState } from "react";
 
 
 function CustomToggle({ children, eventKey }) {
-  const decoratedOnClick = useAccordionButton(eventKey
-  );
-
+  const decoratedOnClick = useAccordionButton(eventKey);
   return (
     <Button
       type="button"
@@ -78,7 +76,6 @@ function SearchOptions() {
 
 function App() {
   //58624
-
   return (
     <div>
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>

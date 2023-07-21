@@ -47,7 +47,7 @@ function GetData({busStop}) {
     )
   }
 
-  function BusTabs({busses}) {
+  export function BusTabs({busses}) {
     let busTimes = [];
     for(let i = 0; i < busses.length; i++) {
       busTimes.push(
@@ -76,7 +76,7 @@ function GetData({busStop}) {
     return busTimes;
   }
 
-  function Bus({scheduleArray}) {
+  export function Bus({scheduleArray}) {
     const busTimes = [];
     for(let i = 0; i < scheduleArray.length; i++) {
       let str = scheduleArray[i].ExpectedLeaveTime;
@@ -136,7 +136,7 @@ function GetData({busStop}) {
     )
   }
 
-  function RenderBusses({stop}) {
+function RenderBusses({stop}) {
 
     return (
         <GetData busStop={stop} />
@@ -144,3 +144,4 @@ function GetData({busStop}) {
   }
 
 export default RenderBusses;
+

@@ -98,9 +98,12 @@ export function GetData({busStop}) {
     
     let mins = today.getMinutes();
     let hours = today.getHours();
+    console.log(hours)
     if(hours > 12) {
       hours -= 12;
-    } 
+    } else if (hours === 0) {
+      hours = 12;
+    }
 
     let nextBusMins;
     let nextBusHours;
@@ -114,6 +117,7 @@ export function GetData({busStop}) {
       nextBusMins = nextBus.substring(2,4);
       nextBusHours = nextBus.substring(0,1);
     }
+    console.log(nextBusHours)
 
     let diff;
     if(nextBusHours.toString() === hours.toString()) {

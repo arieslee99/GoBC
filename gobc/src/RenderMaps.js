@@ -4,6 +4,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import RenderBusses from './RenderBusses';
+import SearchOptions from './App';
 
 function CurrentLocation() {
 
@@ -49,8 +50,8 @@ function Map({latitude, longitude}) {
     >
       <MarkerF position={center} />
     </GoogleMap>
-
-    <CurrentLocationSched CurrentLocation={center}/>
+    
+    {/* <CurrentLocationSched CurrentLocation={center}/> */}
 
     </div>
 )}
@@ -72,7 +73,7 @@ function CurrentLocationSched({CurrentLocation}) {
     const BASE_URL = "https://api.translink.ca";
     let URL =
       `${BASE_URL}/rttiapi/v1/stops?apikey=${process.env.REACT_APP_TRANSLINK_API}&lat=${CurrentLocation.lat}&long=${CurrentLocation.lng}&radius=50`;
-    
+ 
     fetch(URL, {headers}) 
     .then((response) => response.json())
     .then(setData)

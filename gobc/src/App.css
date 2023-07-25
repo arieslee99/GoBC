@@ -1,17 +1,20 @@
+
 .App {
+  position: relative;
+  z-index: 1;
   text-align: center;
   font-weight: bold;
   color: midnightblue;
   font-size: 75px;
-  padding: 20px;
-  position: relative;
-  z-index:99;
+  padding: 0px;
 
 }
 
-.Container {
-  position: relative;
+.offcanvas {
+  width: 50% !important;
 }
+
+
 
 .FormTraits {
   text-align: center;
@@ -19,22 +22,19 @@
   padding: 20px;
 }
 
+
 .map-container {
-  height: 70vh;
+  height: 100vh;
   width: 50%;
+  position: absolute;
   margin-left: 50%;
+  z-index: 0;
 }
 
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
 .App-header {

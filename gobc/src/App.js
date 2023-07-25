@@ -2,9 +2,10 @@ import './App.css';
 import RenderBusses from './RenderBusses';
 import RenderMaps from './RenderMaps';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Accordion from 'react-bootstrap/Accordion';
+import Offcanvas from 'react-bootstrap/Offcanvas';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
-import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { useState } from "react";
 
@@ -50,29 +51,45 @@ function ByBusStop() {
 }
 
 function SearchOptions() {
+
   return (
-    <Accordion defaultActiveKey="0">
-      <Card style={{border: "none"}}>
-        <Card.Header style={{border: "none"}}>
-          <CustomToggle eventKey="0">Bus Stop Number</CustomToggle>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
+    <>
+      <Offcanvas show={true} backdrop={false} scroll={true}>
+        <Offcanvas.Header>
+          <Offcanvas.Title as="h1" style={{fontWeight: "bold", fontSize: "75px"}}>
+          Go<i style={{color: "cornflowerblue"}}>BC</i>
+          </Offcanvas.Title>
+        </Offcanvas.Header >
+        <Offcanvas.Body >
+        <Tabs
+          defaultActiveKey="profile"
+          id="uncontrolled-tab-example"
+          className="mb-3"
+        >
+          <Tab eventKey="home" title="Your Location">
+            Tab content for Home
+          </Tab>
+          <Tab eventKey="profile" title="Search by Bus Stop">
             <ByBusStop />
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
-  );
+          </Tab>
+        </Tabs>
+
+
+          
+        </Offcanvas.Body>
+      </Offcanvas>
+    </>
+  )
 }
+
 
 function App() {
   //58624
   return (
-    <div className="Container">
-      <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
-      <RenderMaps />
+    <div>
       <SearchOptions />
+      <RenderMaps />
+      
     </div>
 
   )

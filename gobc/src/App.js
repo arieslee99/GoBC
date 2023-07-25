@@ -62,14 +62,6 @@ function SearchOptions() {
           </Card.Body>
         </Accordion.Collapse>
       </Card>
-      <Card style={{border: "none"}}>
-        <Card.Header style={{border: "none"}}>
-          <CustomToggle eventKey="1">Bus Id</CustomToggle>
-        </Card.Header>
-        <Accordion.Collapse eventKey="1">
-          <Card.Body>Hello! I'm another body</Card.Body>
-        </Accordion.Collapse>
-      </Card>
     </Accordion>
   );
 }
@@ -77,7 +69,7 @@ function SearchOptions() {
 function App() {
   //58624
   return (
-    <div>
+    <div className="Container">
       <h1 className='App'>Go<i style={{color: "cornflowerblue"}}>BC</i></h1>
       <RenderMaps />
       <SearchOptions />

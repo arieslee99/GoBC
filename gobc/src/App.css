@@ -4,8 +4,14 @@
   color: midnightblue;
   font-size: 75px;
   padding: 20px;
+  position: relative;
+  z-index:99;
+
 }
 
+.Container {
+  position: relative;
+}
 
 .FormTraits {
   text-align: center;

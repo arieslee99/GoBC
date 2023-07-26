@@ -6,6 +6,7 @@ import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import RenderBusses from './RenderBusses';
 import SearchOptions from './App';
 
+
 function CurrentLocation() {
 
   const [lat, setLat] = useState(null);
@@ -27,7 +28,7 @@ function CurrentLocation() {
 
 }
 
-function RenderGoogleMap({lat, long}) {
+export function RenderGoogleMap({lat, long}) {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
@@ -50,13 +51,11 @@ function Map({latitude, longitude}) {
     >
       <MarkerF position={center} />
     </GoogleMap>
-    
-    {/* <CurrentLocationSched CurrentLocation={center}/> */}
 
     </div>
 )}
 
-function CurrentLocationSched({CurrentLocation}) {
+export function CurrentLocationSched({CurrentLocation}) {
 
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -73,7 +72,7 @@ function CurrentLocationSched({CurrentLocation}) {
     const BASE_URL = "https://api.translink.ca";
     let URL =
       `${BASE_URL}/rttiapi/v1/stops?apikey=${process.env.REACT_APP_TRANSLINK_API}&lat=${CurrentLocation.lat}&long=${CurrentLocation.lng}&radius=50`;
- 
+    
     fetch(URL, {headers}) 
     .then((response) => response.json())
     .then(setData)
@@ -87,8 +86,8 @@ function CurrentLocationSched({CurrentLocation}) {
   if(!data) return null;
 
   return (
-    //<pre>{JSON.stringify(data, null, 2)}</pre>
-    <NearbyStations stations={data}/>
+    <pre>{JSON.stringify(data, null, 2)}</pre>
+    // <NearbyStations stations={data}/>
   )
 }
 

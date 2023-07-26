@@ -1,7 +1,5 @@
 
 .App {
-  position: relative;
-  z-index: 1;
   text-align: center;
   font-weight: bold;
   color: midnightblue;
@@ -28,7 +26,6 @@
   width: 50%;
   position: absolute;
   margin-left: 50%;
-  z-index: 0;
 }
 
 

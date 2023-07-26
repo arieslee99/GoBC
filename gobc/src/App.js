@@ -1,17 +1,13 @@
 import './App.css';
 import RenderBusses from './RenderBusses';
 import CurrentLocation from './RenderMaps';
-import RenderGoogleMap from './RenderMaps';
+import CurrentLocationSched from './RenderAutoBusses';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import Button from 'react-bootstrap/Button';
-import Spinner from 'react-bootstrap/Spinner';
-import ListGroup from 'react-bootstrap/ListGroup';
-import Badge from 'react-bootstrap/Badge';
-import {BsFillPinMapFill } from "react-icons/bs";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 
 function ByBusStop() {
   const [input, setInput] = useState('');
@@ -40,14 +36,13 @@ function ByBusStop() {
 }
 
 function SearchOptions() {
-  const [lat, setLat] = useState(null);
-  const [long, setLong] = useState(null);
+  const [lat, setLat] = useState(0.000000);
+  const [long, setLong] = useState(0.000000);
 
   if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
       setLat(Number(position.coords.latitude.toFixed(6)));
       setLong(Number(position.coords.longitude.toFixed(6)));
-      
     });
   }
 
@@ -62,6 +57,7 @@ function SearchOptions() {
         <Offcanvas.Header>
           <Offcanvas.Title as="h1" style={{fontWeight: "bold", fontSize: "75px"}}>
           Go<i style={{color: "cornflowerblue"}}>BC</i>
+
           </Offcanvas.Title>
         </Offcanvas.Header >
         <Offcanvas.Body >
@@ -70,7 +66,7 @@ function SearchOptions() {
           id="uncontrolled-tab-example"
           className="mb-3"
         >
-          <Tab eventKey="home" title="Your Location">
+          <Tab eventKey="home" title="Near You">
             <CurrentLocationSched CurrentLocation={location}/>
           </Tab>
 
@@ -79,88 +75,19 @@ function SearchOptions() {
           </Tab>
         </Tabs>
 
-          
         </Offcanvas.Body>
       </Offcanvas>
     </>
   )
 }
 
-  function CurrentLocationSched({CurrentLocation}) {
-
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-
-    const headers = new Headers();
-    headers.append("Content-Type", "application/JSON");
-    headers.append("Accept", "application/JSON");
-
-    setLoading(true);
-
-    const BASE_URL = "https://api.translink.ca";
-    let URL =
-      `${BASE_URL}/rttiapi/v1/stops?apikey=${process.env.REACT_APP_TRANSLINK_API}&lat=${CurrentLocation.lat}&long=${CurrentLocation.lng}&radius=50`;
-      //49.168476
-      //-123.136817
-    fetch(URL, {headers}) 
-    .then((response) => response.json())
-    .then(setData)
-    .then(() => {setLoading(false)})
-    .catch(setError);
-  }, [CurrentLocation]);
-
-
-  if(loading) return <Spinner animation="grow"/>
-  if(error) return <pre>{JSON.stringify(error)}</pre>
-  if(!data) return null;
-
-  return (
-    // <pre>{JSON.stringify(data, null, 2)}</pre>
-    <NearbyStations stations={data}/>
-  )
-}
-
-function NearbyStations({stations}) {
-  const obj = JSON.parse(JSON.stringify(stations));
-
-  return (
-    <Schedules busses = {obj}/>
-  )
-}
-
-function Schedules({busses}) {
-  let busTimes = [];
-  for(let i = 0; i < busses.length; i++) {
-    let stop = busses[i].StopNo;
-    let name = busses[i].Name;
-    busTimes.push(
-      <ListGroup.Item as="li" className="d-flex justify-content-between align-items-start">
-        <div style={{fontSize: 15, paddingBottom: "30px"}}className="fw-bold">
-          <Badge style={{fontSize: 15, color: "white"}} bg="primary" pill>
-            <BsFillPinMapFill style={{marginRight: 7}}/>
-            {name}
-          </Badge>
-          
-          <RenderBusses stop={stop}/>
-        </div>
-      </ListGroup.Item>
-    )
-  }
-
-  return busTimes;
-}
-
 function App() {
   //58624
   return (
     <div>
-      <SearchOptions />
       <CurrentLocation />
+      <SearchOptions />
     </div>
-
   )
 }
 

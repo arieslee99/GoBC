@@ -21,7 +21,7 @@ function CurrentLocationSched({CurrentLocation}) {
       const BASE_URL = "https://api.translink.ca";
   
       let URL =
-        `${BASE_URL}/rttiapi/v1/stops?apikey=${process.env.REACT_APP_TRANSLINK_API}&lat=${CurrentLocation.lat}&long=${CurrentLocation.lng}&radius=50`
+        `${BASE_URL}/rttiapi/v1/stops?apikey=${process.env.REACT_APP_TRANSLINK_API}&lat=${CurrentLocation.lat}&long=${CurrentLocation.lng}&radius=500`
       fetch(URL, {headers}) 
       .then((response) => response.json())
       .then(setData)

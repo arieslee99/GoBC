@@ -48,8 +48,10 @@ export function GetData({busStop}) {
   }
 
   export function BusTabs({busses}) {
+  
     let busTimes = [];
     for(let i = 0; i < busses.length; i++) {
+      
       busTimes.push(
       <ListGroup.Item as="li" className="d-flex justify-content-between align-items-start">
         <div className="ms-2 me-auto">
@@ -58,7 +60,7 @@ export function GetData({busStop}) {
   
             <div style={{padding: "5px"}}>
               <BsFillArrowRightCircleFill style={{marginRight: 5}}/>
-              {busses[i].Schedules[i].Destination}
+              {/* {busses[i].Schedules[i].Destination} */}
               <Badge style={{fontSize: 13, marginLeft: "10px", color: "black"}} bg="warning" pill>
                 <CalculateTime nextBus={busses[i].Schedules[0].ExpectedLeaveTime}/>
               </Badge>

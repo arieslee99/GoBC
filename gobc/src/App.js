@@ -51,12 +51,21 @@ function SearchOptions() {
     lng: long
   }
 
+  const [change, setChange] = useState(false);
+  const handleChange = (event) => {
+    event.preventDefault();
+    setChange(true)
+    window.location.reload(change)
+    setChange(false)
+  }
+
   return (
     <>
+      {/* darkmode: data-bs-theme="dark" */}
       <Offcanvas show={true} backdrop={false} scroll={true}>
         <Offcanvas.Header>
-          <Offcanvas.Title as="h1" style={{fontWeight: "bold", fontSize: "75px"}}>
-          Go<i style={{color: "cornflowerblue"}}>BC</i>
+          <Offcanvas.Title as="h1" style={{fontWeight: "bold", fontSize: "75px", cursor: "pointer"}} onClick={handleChange}>
+          Go<i style={{color: "cornflowerblue"}} >BC</i>
 
           </Offcanvas.Title>
         </Offcanvas.Header >

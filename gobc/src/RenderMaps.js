@@ -1,6 +1,6 @@
 import './App.css';
 import { useState, useMemo} from "react";
-import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, MarkerF, MapOptions } from '@react-google-maps/api';
 
 function CurrentLocation() {
 
@@ -20,7 +20,6 @@ function CurrentLocation() {
   return (
     <RenderGoogleMap lat={lat} long={long}/>
   )
-
 }
 
 export function RenderGoogleMap({lat, long}) {
@@ -43,6 +42,7 @@ function Map({latitude, longitude}) {
       zoom={18}
       center={center}
       mapContainerClassName="map-container"
+      
     >
       <MarkerF position={center} />
     </GoogleMap>

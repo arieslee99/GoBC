@@ -139,7 +139,6 @@ export function GetData({busStop}) {
   }
 
 function RenderBusses({stop}) {
-
     return (
         <GetData busStop={stop} />
     )

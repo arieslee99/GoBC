@@ -28,21 +28,19 @@ export function RenderGoogleMap({lat, long}) {
   });
 
   if(!isLoaded) return <div>loading</div>;
-  return <Map latitude={lat} longitude={long} />; 
+  return <Map latitude={lat} longitude={long}/>; 
 }
 
 function Map({latitude, longitude}) {
   const center = useMemo(() => ({
     lat: latitude, lng: longitude,
   }), [latitude, longitude]);
-
   return (
     <div>
       <GoogleMap 
       zoom={18}
       center={center}
       mapContainerClassName="map-container"
-      
     >
       <MarkerF position={center} />
     </GoogleMap>

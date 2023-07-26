@@ -7,7 +7,6 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import Button from 'react-bootstrap/Button';
-import { MdDarkMode } from "react-icons/md";
 import { useState} from "react";
 
 function ByBusStop() {
@@ -26,9 +25,9 @@ function ByBusStop() {
 
   return (
     <div>
-    <form className='FormTraits' onSubmit={handleSubmit}>
+    <form className='FormTraits' onSubmit={handleSubmit} style={{marginBottom: "15px"}}>
         <p>Enter Bus Stop number:</p>
-        <input style={{borderRadius: "7px", marginRight: "15px", padding: "8px"}} size="lg" id="bnum" type="text" value={input} placeholder="Bus Stop Number" onChange={handleChange} />
+        <input style={{borderRadius: "7px", marginRight: "15px", padding: "7px"}} size="lg" id="bnum" type="text" value={input} placeholder="Bus Stop Number" onChange={handleChange} />
         <Button style={{backgroundColor: "navyblue", border: "none", padding: "8px"}}type="submit">Check Schedule</Button>
     </form>
       <RenderBusses stop={updated} />
@@ -61,7 +60,7 @@ function SearchOptions() {
   }
 
   const [darkmode, setDarkmode] = useState(false);
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState("");
   const handleMode = (event) => {
     event.preventDefault();
     setDarkmode(!darkmode);
@@ -70,11 +69,11 @@ function SearchOptions() {
     } else {
       setMode("dark");
     }
+  
   }
 
   return (
     <>
-      {/* darkmode: data-bs-theme="dark" */}
       <Offcanvas show={true} backdrop={false} scroll={true} data-bs-theme={mode}>
         <Offcanvas.Header>
           <Offcanvas.Title as="h1" style={{fontWeight: "bold", fontSize: "75px", cursor: "pointer"}} onClick={handleChange}>
@@ -105,12 +104,14 @@ function SearchOptions() {
   )
 }
 
+
+
 function App() {
   //58624
   return (
     <div>
-      <CurrentLocation />
       <SearchOptions />
+      <CurrentLocation />
     </div>
   )
 }

@@ -7,6 +7,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import Button from 'react-bootstrap/Button';
+import { MdDarkMode } from "react-icons/md";
 import { useState} from "react";
 
 function ByBusStop() {
@@ -59,15 +60,29 @@ function SearchOptions() {
     setChange(false)
   }
 
+  const [darkmode, setDarkmode] = useState(false);
+  const [mode, setMode] = useState("light");
+  const handleMode = (event) => {
+    event.preventDefault();
+    setDarkmode(!darkmode);
+    if(darkmode) {
+      setMode("light");
+    } else {
+      setMode("dark");
+    }
+  }
+
   return (
     <>
       {/* darkmode: data-bs-theme="dark" */}
-      <Offcanvas show={true} backdrop={false} scroll={true}>
+      <Offcanvas show={true} backdrop={false} scroll={true} data-bs-theme={mode}>
         <Offcanvas.Header>
           <Offcanvas.Title as="h1" style={{fontWeight: "bold", fontSize: "75px", cursor: "pointer"}} onClick={handleChange}>
-          Go<i style={{color: "cornflowerblue"}} >BC</i>
-
+            Go<i style={{color: "cornflowerblue"}} >BC</i>
           </Offcanvas.Title>
+          <div class="form-check form-switch" >
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onMouseDown={handleMode}></input>
+          </div>
         </Offcanvas.Header >
         <Offcanvas.Body >
         <Tabs

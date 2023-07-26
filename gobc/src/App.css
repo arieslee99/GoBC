@@ -4,20 +4,21 @@
   font-weight: bold;
   color: midnightblue;
   font-size: 75px;
-  padding: 0px;
-
 }
 
 .offcanvas {
   width: 50% !important;
 }
 
+.form-check-input {
+  transform: scale(1.8);
+  margin-right: 30px;
+}
 
 
 .FormTraits {
   text-align: center;
   font-size: 20px;
-  padding: 20px;
 }
 
 

@@ -1,6 +1,6 @@
 import './App.css';
 import { useState, useMemo} from "react";
-import { GoogleMap, useLoadScript, MarkerF, MapOptions } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, MarkerF} from '@react-google-maps/api';
 
 function CurrentLocation() {
 

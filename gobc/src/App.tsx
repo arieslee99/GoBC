@@ -9,28 +9,37 @@ import Tab from 'react-bootstrap/Tab';
 import Button from 'react-bootstrap/Button';
 import { useState} from "react";
 
+type Stop = {
+  busStopNumber: string;
+};
+
 function ByBusStop() {
+  const s: Stop = {
+    busStopNumber: ""
+  }
+
   const [input, setInput] = useState('');
   const [updated, setUpdated] = useState(input);
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
     setUpdated(input);
-
+    s.busStopNumber = updated;
   };
-
+  
   return (
     <div>
     <form className='FormTraits' onSubmit={handleSubmit} style={{marginBottom: "15px"}}>
         <p>Enter Bus Stop number:</p>
-        <input style={{borderRadius: "7px", marginRight: "15px", padding: "7px"}} size="lg" id="bnum" type="text" value={input} placeholder="Bus Stop Number" onChange={handleChange} />
+        <input style={{borderRadius: "7px", marginRight: "15px", padding: "7px"}} size={15} id="bnum" type="text" value={input} placeholder="Bus Stop Number" onChange={handleChange} />
         <Button style={{backgroundColor: "navyblue", border: "none", padding: "8px"}}type="submit">Check Schedule</Button>
     </form>
-      <RenderBusses stop={updated} />
+      {RenderBusses(s.busStopNumber)}
+      {/* <RenderBusses s={updated} /> */}
     </div>
   )
 }
@@ -52,16 +61,16 @@ function SearchOptions() {
   }
 
   const [change, setChange] = useState(false);
-  const handleChange = (event) => {
+  const handleChange = (event: React.MouseEvent) => {
     event.preventDefault();
     setChange(true)
-    window.location.reload(change)
+    window.location.reload();
     setChange(false)
   }
 
   const [darkmode, setDarkmode] = useState(false);
   const [mode, setMode] = useState("");
-  const handleMode = (event) => {
+  const handleMode = (event: React.MouseEvent) => {
     event.preventDefault();
     setDarkmode(!darkmode);
     if(darkmode) {
@@ -79,8 +88,8 @@ function SearchOptions() {
           <Offcanvas.Title as="h1" style={{fontWeight: "bold", fontSize: "75px", cursor: "pointer"}} onClick={handleChange}>
             Go<i style={{color: "cornflowerblue"}} >BC</i>
           </Offcanvas.Title>
-          <div class="form-check form-switch" >
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onMouseDown={handleMode}></input>
+          <div className="form-check form-switch" >
+            <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onMouseDown={handleMode}></input>
           </div>
         </Offcanvas.Header >
         <Offcanvas.Body >

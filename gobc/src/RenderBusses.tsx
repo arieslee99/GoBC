@@ -5,7 +5,20 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { BsFillArrowRightCircleFill, BsArrowLeftRight} from "react-icons/bs";
 import Badge from 'react-bootstrap/Badge';
 
-export function GetData({busStop}) {
+type BusStop = {
+  stopNumber: string;
+}
+
+interface Schedules {
+  busses: [];
+}
+
+export function GetData(bs: string) {
+
+    const scheds: Schedules = {
+      busses: []
+    }
+
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -17,7 +30,7 @@ export function GetData({busStop}) {
   
       setLoading(true);
       const BASE_URL = "https://api.translink.ca"
-      const SEARCH_PATH = busStop;
+      const SEARCH_PATH = bs;
       let FINAL_URL = `${BASE_URL}/rttiapi/v1/stops/${SEARCH_PATH}/estimates?apikey=${process.env.REACT_APP_TRANSLINK_API}`;
   
       fetch(FINAL_URL, {headers}) 
@@ -25,24 +38,28 @@ export function GetData({busStop}) {
       .then(setData)
       .then(() => {setLoading(false)})
       .catch(setError);
-    }, [busStop]);
+    }, [bs]);
     
     if (loading) return <Spinner animation="grow"/>
     if (error) return <pre>{JSON.stringify(error)}</pre>
     if (!data) return null; 
-  
+    
+    scheds.busses = data;
+
     return (
       //<pre>{JSON.stringify(data, null, 2)}</pre>
-      <Schedule schedule={data}/>
+      // <Schedule schedule={data}/>
+      Schedule(scheds.busses)
     )
   }
 
-  function Schedule({schedule}) {
-    const obj = JSON.parse(JSON.stringify(schedule)); 
+  function Schedule(busses: []) {
+    const obj = JSON.parse(JSON.stringify(busses)); 
 
     return (
       <ListGroup variant="info"> 
-        <BusTabs busses= {obj}/>
+        {BusTabs(obj)}
+        {/* <BusTabs busses= {obj}/> */}
       </ListGroup>
     )
   }
@@ -51,7 +68,6 @@ export function GetData({busStop}) {
   
     let busTimes = [];
     for(let i = 0; i < busses.length; i++) {
-      
       busTimes.push(
       <ListGroup.Item as="li" className="d-flex justify-content-between align-items-start">
         <div className="ms-2 me-auto">
@@ -62,7 +78,8 @@ export function GetData({busStop}) {
               <BsFillArrowRightCircleFill style={{marginRight: 5}}/>
               {busses[i].Schedules[i].Destination}
               <Badge style={{fontSize: 13, marginLeft: "10px", color: "black"}} bg="warning" pill>
-                <CalculateTime nextBus={busses[i].Schedules[0].ExpectedLeaveTime}/>
+                {CalculateTime(busses[i].Schedules[0].ExpectedLeaveTime)}
+                {/* <CalculateTime nextBus={busses[i].Schedules[0].ExpectedLeaveTime}/> */}
               </Badge>
             </div>
   
@@ -121,28 +138,50 @@ export function GetData({busStop}) {
 
     let diff;
     if(nextBusHours.toString() === hours.toString()) {
-      if(Array.from(mins)[0] === 0 && Array.from(nextBusMins)[0] === 0) {
-        diff = (Math.max(Array.from(nextBusMins)[1], Array.from(mins)[1])) - (Math.min(Array.from(nextBusMins)[1], Array.from(mins)[1]));
-      } else if (Array.from(mins)[0] === 0) {
-        diff = nextBusMins - Array.from(mins)[1];
-      } else if (Array.from(nextBusMins)[0] === 0){
-        diff = mins - Array.from(nextBusMins)[1];
+      if(mins[0] === 0 && nextBusMins[0] === 0) {
+        diff = Math.max(mins[1], nextBusMins[1]) - Math.min(mins[1], nextBusMins[1]);
+      } else if (mins[0] === 0) {
+        diff = nextBusMins - mins[1];
+      } else if (nextBusMins[0] === 0) {
+        diff = mins - nextBusMins[1];
       } else {
         diff = (Math.max(mins, nextBusMins)) - (Math.min(mins, nextBusMins));
       }
     } else {
-        let x = 60 - (Math.max(mins, nextBusMins));
+       let x = 60 - (Math.max(mins, nextBusMins));
         diff = x + (Math.min(mins, nextBusMins));
     }
+
+
+
+    //   if(Array.from(mins)[0] === 0 && Array.from(nextBusMins)[0] === 0) {
+    //     diff = (Math.max(Array.from(nextBusMins)[1], Array.from(mins)[1])) - (Math.min(Array.from(nextBusMins)[1], Array.from(mins)[1]));
+    //   } else if (Array.from(mins)[0] === 0) {
+    //     diff = nextBusMins - Array.from(mins)[1];
+    //   } else if (Array.from(nextBusMins)[0] === 0){
+    //     diff = mins - Array.from(nextBusMins)[1];
+    //   } else {
+    //     diff = (Math.max(mins, nextBusMins)) - (Math.min(mins, nextBusMins));
+    //   }
+    // } else {
+    //     let x = 60 - (Math.max(mins, nextBusMins));
+    //     diff = x + (Math.min(mins, nextBusMins));
+    // }
     
     return (
       "Leaving in " + diff + " minutes"
     )
   }
 
-function RenderBusses({stop}) {
+function RenderBusses(s: string) {
+    const bs: BusStop = {
+      stopNumber: ""
+    }
+    bs.stopNumber = s;
+    
     return (
-        <GetData busStop={stop} />
+      GetData(bs.stopNumber)
+    //  <GetData busStop={s} />
     )
   }
 

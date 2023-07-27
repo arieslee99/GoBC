@@ -32,7 +32,7 @@ function CurrentLocationSched({CurrentLocation}) {
   
     if(loading) return <Spinner animation="grow"/>
     if(error) return <pre>{JSON.stringify(error)}</pre>
-    if(!data) return null;
+    if(typeof(data) == "undefined" || data === null) return null;
   
     return (
       <NearbyStations stations={data}/>
@@ -42,7 +42,11 @@ function CurrentLocationSched({CurrentLocation}) {
   function NearbyStations({stations}) {
     const obj = JSON.parse(JSON.stringify(stations));
     return (
-      <Schedules busses = {obj}/>
+      <> {
+        Schedules(obj)
+        // <Schedules busses = {obj}/>
+      }</>
+      
     )
   }
   

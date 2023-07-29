@@ -1,12 +1,13 @@
 import './App.css';
 import RenderBusses from './RenderBusses';
-import CurrentLocation from './RenderMaps';
+import RenderMaps from './RenderMaps';
 import CurrentLocationSched from './RenderAutoBusses';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import Button from 'react-bootstrap/Button';
+import type {LatLong} from './RenderMaps';
 import { useState} from "react";
 
 type Stop = {
@@ -18,19 +19,19 @@ function ByBusStop() {
     busStopNumber: ""
   }
 
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [updated, setUpdated] = useState(input);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
   };
 
-  const handleSubmit = (event: React.SyntheticEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     setUpdated(input);
-    s.busStopNumber = updated;
   };
   
+  s.busStopNumber = updated;
   return (
     <div>
     <form className='FormTraits' onSubmit={handleSubmit} style={{marginBottom: "15px"}}>
@@ -38,38 +39,27 @@ function ByBusStop() {
         <input style={{borderRadius: "7px", marginRight: "15px", padding: "7px"}} size={15} id="bnum" type="text" value={input} placeholder="Bus Stop Number" onChange={handleChange} />
         <Button style={{backgroundColor: "navyblue", border: "none", padding: "8px"}}type="submit">Check Schedule</Button>
     </form>
-      {RenderBusses(s.busStopNumber)}
-      {/* <RenderBusses s={updated} /> */}
+    {RenderBusses(s)}
     </div>
   )
 }
 
 function SearchOptions() {
-  const [lat, setLat] = useState(0.000000);
-  const [long, setLong] = useState(0.000000);
+  const [darkmode, setDarkmode] = useState(false);
+  const [mode, setMode] = useState("");
+
+  const currentSpot: LatLong = {
+    lat: 0.000000,
+    long: 0.000000
+  }
 
   if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-      setLat(Number(position.coords.latitude.toFixed(6)));
-      setLong(Number(position.coords.longitude.toFixed(6)));
+      currentSpot.lat = (Number(position.coords.latitude.toFixed(6)));
+      currentSpot.long = (Number(position.coords.longitude.toFixed(6)));
     });
   }
-
-  let location = {
-    lat: lat,
-    lng: long
-  }
-
-  const [change, setChange] = useState(false);
-  const handleChange = (event: React.MouseEvent) => {
-    event.preventDefault();
-    setChange(true)
-    window.location.reload();
-    setChange(false)
-  }
-
-  const [darkmode, setDarkmode] = useState(false);
-  const [mode, setMode] = useState("");
+  
   const handleMode = (event: React.MouseEvent) => {
     event.preventDefault();
     setDarkmode(!darkmode);
@@ -78,14 +68,13 @@ function SearchOptions() {
     } else {
       setMode("dark");
     }
-  
   }
 
   return (
     <>
       <Offcanvas show={true} backdrop={false} scroll={true} data-bs-theme={mode}>
         <Offcanvas.Header>
-          <Offcanvas.Title as="h1" style={{fontWeight: "bold", fontSize: "75px", cursor: "pointer"}} onClick={handleChange}>
+          <Offcanvas.Title as="h1" style={{fontWeight: "bold", fontSize: "75px", cursor: "pointer"}} onClick={() => window.location.reload()}>
             Go<i style={{color: "cornflowerblue"}} >BC</i>
           </Offcanvas.Title>
           <div className="form-check form-switch" >
@@ -99,7 +88,8 @@ function SearchOptions() {
           className="mb-3"
         >
           <Tab eventKey="home" title="Near You">
-            <CurrentLocationSched CurrentLocation={location}/>
+            {/* {CurrentLocationSched(currentSpot)} */}
+            {/* <CurrentLocationSched CurrentLocation={location}/> */}
           </Tab>
 
           <Tab eventKey="profile" title="Search by Bus Stop">
@@ -120,9 +110,11 @@ function App() {
   return (
     <div>
       <SearchOptions />
-      <CurrentLocation />
+      {/* <RenderMaps /> */}
+      
     </div>
   )
 }
 
 export default App;
+export type {Stop};

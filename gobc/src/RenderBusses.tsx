@@ -1,20 +1,17 @@
 import './App.css';
+import type {Stop} from "./App";
 import { useState, useEffect} from "react";
 import Spinner from 'react-bootstrap/Spinner';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { BsFillArrowRightCircleFill, BsArrowLeftRight} from "react-icons/bs";
 import Badge from 'react-bootstrap/Badge';
 
-type BusStop = {
-  stopNumber: string;
-}
 
 interface Schedules {
-  busses: [];
+  busses: []; //JSON array
 }
 
-export function GetData(bs: string) {
-
+export function GetData(s:Stop) {
     const scheds: Schedules = {
       busses: []
     }
@@ -30,7 +27,7 @@ export function GetData(bs: string) {
   
       setLoading(true);
       const BASE_URL = "https://api.translink.ca"
-      const SEARCH_PATH = bs;
+      const SEARCH_PATH = s.busStopNumber;
       let FINAL_URL = `${BASE_URL}/rttiapi/v1/stops/${SEARCH_PATH}/estimates?apikey=${process.env.REACT_APP_TRANSLINK_API}`;
   
       fetch(FINAL_URL, {headers}) 
@@ -38,67 +35,65 @@ export function GetData(bs: string) {
       .then(setData)
       .then(() => {setLoading(false)})
       .catch(setError);
-    }, [bs]);
+    }, [s]);
     
-    if (loading) return <Spinner animation="grow"/>
+    if (loading) return <pre>loading</pre>
     if (error) return <pre>{JSON.stringify(error)}</pre>
     if (!data) return null; 
     
-    scheds.busses = data;
+    //handing undefined 
+    scheds.busses = data === undefined ? []: data;
 
     return (
       //<pre>{JSON.stringify(data, null, 2)}</pre>
-      // <Schedule schedule={data}/>
       Schedule(scheds.busses)
     )
   }
 
-  function Schedule(busses: []) {
-    const obj = JSON.parse(JSON.stringify(busses)); 
+  function Schedule(scheds: []) {
+    let busses = JSON.parse(JSON.stringify(scheds)); 
 
     return (
       <ListGroup variant="info"> 
-        {BusTabs(obj)}
-        {/* <BusTabs busses= {obj}/> */}
+        {BusTabs(busses)}
       </ListGroup>
     )
   }
 
-  export function BusTabs({busses}) {
-  
+  export function BusTabs(busses : []) {
     let busTimes = [];
     for(let i = 0; i < busses.length; i++) {
       busTimes.push(
       <ListGroup.Item as="li" className="d-flex justify-content-between align-items-start">
         <div className="ms-2 me-auto">
           <div style={{fontSize: 15}}className="fw-bold">
-            <h1>{busses[i].RouteNo}</h1>
+            <h1>{busses[i]["RouteNo"]}</h1>
   
             <div style={{padding: "5px"}}>
               <BsFillArrowRightCircleFill style={{marginRight: 5}}/>
-              {busses[i].Schedules[i].Destination}
+              {busses[i]["Schedules"][0]["Destination"]}
+  
               <Badge style={{fontSize: 13, marginLeft: "10px", color: "black"}} bg="warning" pill>
-                {CalculateTime(busses[i].Schedules[0].ExpectedLeaveTime)}
-                {/* <CalculateTime nextBus={busses[i].Schedules[0].ExpectedLeaveTime}/> */}
+                {CalculateTime(busses[i]["Schedules"][0]["ExpectedLeaveTime"])}
               </Badge>
             </div>
   
             <BsArrowLeftRight style={{marginRight: 5}}/>
-            {busses[i].RouteName}
+            {busses[i]["RouteName"]}
             
           </div>
-  
-          <Bus scheduleArray={busses[i].Schedules} />
+          {Bus(busses[i]["Schedules"])}
         </div>
       </ListGroup.Item>
     )}
+    
     return busTimes;
   }
 
-  export function Bus({scheduleArray}) {
+  export function Bus(scheduleArray: []) {
     const busTimes = [];
     for(let i = 0; i < scheduleArray.length; i++) {
-      let str = scheduleArray[i].ExpectedLeaveTime;
+      let str : String = scheduleArray[i]['ExpectedLeaveTime'];
       
       busTimes.push(
         <ListGroup.Item action variant="light" style={{marginRight: 5, marginLeft: 5}}>
@@ -112,9 +107,9 @@ export function GetData(bs: string) {
     )
   }
 
-  function CalculateTime({nextBus}) {
+  function CalculateTime(nextBus: string) {
+    //numbers
     let today = new Date();
-    
     let mins = today.getMinutes();
     let hours = today.getHours();
     if(hours > 12) {
@@ -123,10 +118,11 @@ export function GetData(bs: string) {
       hours = 12;
     }
 
+    //strings
     let nextBusMins;
     let nextBusHours;
   
-    if(nextBus.toString().length === 18 || nextBus.toString().length === 7) {
+    if(nextBus.length === 18 || nextBus.length === 7) {
       nextBus = nextBus.substring(0, 8);
       nextBusMins = nextBus.substring(3,5);
       nextBusHours = nextBus.substring(0,2);
@@ -138,18 +134,18 @@ export function GetData(bs: string) {
 
     let diff;
     if(nextBusHours.toString() === hours.toString()) {
-      if(mins[0] === 0 && nextBusMins[0] === 0) {
-        diff = Math.max(mins[1], nextBusMins[1]) - Math.min(mins[1], nextBusMins[1]);
-      } else if (mins[0] === 0) {
-        diff = nextBusMins - mins[1];
-      } else if (nextBusMins[0] === 0) {
-        diff = mins - nextBusMins[1];
+      if(mins.toString()[0] === "0" && nextBusMins[0] === "0") {
+        diff = Math.max(parseInt(mins.toString()[1]), parseInt(nextBusMins[1])) - Math.min(parseInt(mins.toString()[1]), parseInt(nextBusMins[1]));
+      } else if (mins.toString()[0] === "0") {
+        diff = parseInt(nextBusMins) - parseInt(mins.toString()[1]);
+      } else if (nextBusMins[0] === "0") {
+        diff = mins - parseInt(nextBusMins[1]);
       } else {
-        diff = (Math.max(mins, nextBusMins)) - (Math.min(mins, nextBusMins));
+        diff = (Math.max(mins, parseInt(nextBusMins)) - (Math.min(mins, parseInt(nextBusMins))));
       }
     } else {
-       let x = 60 - (Math.max(mins, nextBusMins));
-        diff = x + (Math.min(mins, nextBusMins));
+       let x = 60 - (Math.max(mins, parseInt(nextBusMins)));
+        diff = x + (Math.min(mins, parseInt(nextBusMins)));
     }
 
 
@@ -173,15 +169,9 @@ export function GetData(bs: string) {
     )
   }
 
-function RenderBusses(s: string) {
-    const bs: BusStop = {
-      stopNumber: ""
-    }
-    bs.stopNumber = s;
-    
+function RenderBusses(s: Stop) {
     return (
-      GetData(bs.stopNumber)
-    //  <GetData busStop={s} />
+      GetData(s)
     )
   }
 

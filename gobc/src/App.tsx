@@ -143,7 +143,7 @@ function App() {
   return (
     <div>
       <SearchOptions />
-      {/* <RenderMaps /> */}
+      <RenderMaps />
     </div>
   );
 }

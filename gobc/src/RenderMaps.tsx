@@ -1,5 +1,5 @@
 import "./App.css";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 
 export type LatLong = {
@@ -8,22 +8,25 @@ export type LatLong = {
 };
 
 function CurrentLocation() {
-  const latlong: LatLong = {
+  const [latlong, setLatlong] = useState({
     lat: 0.0,
     long: 0.0,
-  };
+  });
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      latlong.lat = Number(position.coords.latitude.toFixed(6));
-      latlong.long = Number(position.coords.longitude.toFixed(6));
-    });
-  } else {
-    console.log("geolocation not available");
-  }
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLatlong({
+          lat: Number(position.coords.latitude.toFixed(6)),
+          long: Number(position.coords.longitude.toFixed(6)),
+        });
+      });
+    } else {
+      console.log("geolocation not available");
+    }
+  }, []);
 
   return RenderGoogleMap(latlong);
-  // <RenderGoogleMap lat={lat} long={long}/>
 }
 
 export function RenderGoogleMap(latlong: LatLong) {
@@ -32,18 +35,15 @@ export function RenderGoogleMap(latlong: LatLong) {
   });
 
   if (!isLoaded) return <div>loading</div>;
-  // return <Map latitude={lat} longitude={long}/>;
+
   return Map(latlong);
 }
 
 function Map(latlong: LatLong) {
-  const center = useMemo(
-    () => ({
-      lat: latlong.lat,
-      lng: latlong.long,
-    }),
-    [latlong]
-  );
+  const center = {
+    lat: latlong.lat,
+    lng: latlong.long,
+  };
 
   return (
     <div>

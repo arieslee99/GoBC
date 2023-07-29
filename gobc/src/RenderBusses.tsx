@@ -35,11 +35,17 @@ export function GetData(s:Stop) {
       .then(setData)
       .then(() => {setLoading(false)})
       .catch(setError);
-    }, [s]);
+    }, [s.busStopNumber]);
     
-    if (loading) return <pre>loading</pre>
-    if (error) return <pre>{JSON.stringify(error)}</pre>
-    if (!data) return null; 
+    if (loading) {
+      return <Spinner animation="border"/>;
+    }
+    if (error) {
+      return <pre>{JSON.stringify(error)}</pre>;
+    }
+    if (!data) {
+      return null;
+    }
     
     //handing undefined 
     scheds.busses = data === undefined ? []: data;
@@ -64,7 +70,7 @@ export function GetData(s:Stop) {
     let busTimes = [];
     for(let i = 0; i < busses.length; i++) {
       busTimes.push(
-      <ListGroup.Item as="li" className="d-flex justify-content-between align-items-start">
+      <ListGroup.Item key={i} as="li" className="d-flex justify-content-between align-items-start">
         <div className="ms-2 me-auto">
           <div style={{fontSize: 15}}className="fw-bold">
             <h1>{busses[i]["RouteNo"]}</h1>
@@ -96,7 +102,7 @@ export function GetData(s:Stop) {
       let str : String = scheduleArray[i]['ExpectedLeaveTime'];
       
       busTimes.push(
-        <ListGroup.Item action variant="light" style={{marginRight: 5, marginLeft: 5}}>
+        <ListGroup.Item action variant="light" style={{marginRight: 5, marginLeft: 5}} key={i}>
           {str.substring(0,7)}</ListGroup.Item>
       )
     }

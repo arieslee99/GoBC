@@ -22,6 +22,7 @@ function ByBusStop() {
   const [input, setInput] = useState("");
   const [updated, setUpdated] = useState(input);
 
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
   };
@@ -30,7 +31,7 @@ function ByBusStop() {
     event.preventDefault();
     setUpdated(input);
   };
-  
+
   s.busStopNumber = updated;
   return (
     <div>

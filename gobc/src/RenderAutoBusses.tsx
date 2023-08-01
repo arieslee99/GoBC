@@ -7,7 +7,7 @@ import { BsFillPinMapFill } from "react-icons/bs";
 import { useState, useEffect } from "react";
 
 interface Station {
-  stations: [];
+  stations: Array<any>;
 }
 
 function CurrentLocationSched(CurrentLocation: google.maps.LatLngLiteral) {
@@ -38,27 +38,35 @@ function CurrentLocationSched(CurrentLocation: google.maps.LatLngLiteral) {
       .catch(setError);
   }, [CurrentLocation.lat, CurrentLocation.lng]);
 
-  if (loading) return <Spinner animation="border" />;
+  if (loading)
+    return (
+      <div>
+        <Spinner animation="border" />
+      </div>
+    );
   if (error) return <pre>{JSON.stringify(error)}</pre>;
   if (!data) return null;
 
   st.stations = data === undefined ? [] : data;
-  return <NearbyStations {...st.stations} />;
+  return <NearbyStations stations={st.stations} />;
 }
 
-function NearbyStations(stations: []) {
-  let obj = JSON.parse(JSON.stringify(stations));
-  return <Schedules {...obj} />;
+function NearbyStations(st: Station) {
+  let obj = JSON.parse(JSON.stringify(st.stations));
+  let s: Station = {
+    stations: obj,
+  };
+  return <Schedules stations={s.stations} />;
 }
 
-function Schedules(busses: []) {
+function Schedules(s: Station) {
   let busTimes = [];
 
-  for (let i = 0; i < busses.length; i++) {
-    let s = busses[i]["StopNo"];
-    let name = busses[i]["Name"];
+  for (let i = 0; i < s.stations.length; i++) {
+    let sh = s.stations[i]["StopNo"];
+    let name = s.stations[i]["Name"];
     const stop: Stop = {
-      busStopNumber: s,
+      busStopNumber: sh,
     };
 
     busTimes.push(

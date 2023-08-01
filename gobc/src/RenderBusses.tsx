@@ -39,7 +39,11 @@ export function GetData(s: Stop) {
   }, [s.busStopNumber]);
 
   if (loading) {
-    return <Spinner animation="border" />;
+    return (
+      <div>
+        <Spinner animation="border" />
+      </div>
+    );
   }
   if (error) {
     return <pre>{JSON.stringify(error)}</pre>;

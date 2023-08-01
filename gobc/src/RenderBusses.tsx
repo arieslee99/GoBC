@@ -83,6 +83,7 @@ export function BusTabs(s: Schedules) {
         key={i}
         as="li"
         className="d-flex justify-content-between align-items-start"
+        style={{ display: "flex", flexWrap: "wrap" }}
       >
         <div className="ms-2 me-auto">
           <div style={{ fontSize: 15 }} className="fw-bold">
@@ -124,7 +125,10 @@ export function Bus(scheduleArray: Schedules) {
       <ListGroup.Item
         action
         variant="light"
-        style={{ marginRight: 5, marginLeft: 5 }}
+        style={{
+          marginRight: 5,
+          marginLeft: 5,
+        }}
         key={i}
       >
         {str.substring(0, 7)}
@@ -136,7 +140,6 @@ export function Bus(scheduleArray: Schedules) {
       {busTimes}
     </ListGroup>
   );
-  // return <>{busTimes}</>;
 }
 
 function calculateTime(nextBus: string) {
@@ -183,21 +186,6 @@ function calculateTime(nextBus: string) {
     let x = 60 - Math.max(mins, parseInt(nextBusMins));
     diff = x + Math.min(mins, parseInt(nextBusMins));
   }
-
-  //   if(Array.from(mins)[0] === 0 && Array.from(nextBusMins)[0] === 0) {
-  //     diff = (Math.max(Array.from(nextBusMins)[1], Array.from(mins)[1])) - (Math.min(Array.from(nextBusMins)[1], Array.from(mins)[1]));
-  //   } else if (Array.from(mins)[0] === 0) {
-  //     diff = nextBusMins - Array.from(mins)[1];
-  //   } else if (Array.from(nextBusMins)[0] === 0){
-  //     diff = mins - Array.from(nextBusMins)[1];
-  //   } else {
-  //     diff = (Math.max(mins, nextBusMins)) - (Math.min(mins, nextBusMins));
-  //   }
-  // } else {
-  //     let x = 60 - (Math.max(mins, nextBusMins));
-  //     diff = x + (Math.min(mins, nextBusMins));
-  // }
-
   return "Leaving in " + diff + " minutes";
 }
 

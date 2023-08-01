@@ -113,7 +113,7 @@ function SearchOptions(spot: google.maps.LatLngLiteral) {
         scroll={true}
         data-bs-theme={mode}
       >
-        <Offcanvas.Header>
+        <Offcanvas.Header style={{ display: "flex", flexWrap: "wrap" }}>
           <Offcanvas.Title
             as="h1"
             style={{ fontWeight: "bold", fontSize: "75px", cursor: "pointer" }}

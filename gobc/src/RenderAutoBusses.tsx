@@ -70,10 +70,7 @@ function Schedules(s: Station) {
     };
 
     busTimes.push(
-      <ListGroup.Item
-        as="li"
-        className="d-flex justify-content-between align-items-start"
-      >
+      <ListGroup variant="info">
         <div
           style={{ fontSize: 15, paddingBottom: "30px" }}
           className="fw-bold"
@@ -88,7 +85,7 @@ function Schedules(s: Station) {
           </Badge>
           <RenderBusses busStopNumber={stop.busStopNumber} />
         </div>
-      </ListGroup.Item>
+      </ListGroup>
     );
   }
   return <>{busTimes}</>;

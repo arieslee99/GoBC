@@ -1,5 +1,4 @@
 import RenderBusses from "./RenderBusses";
-import type { LatLong } from "./RenderMaps";
 import type { Stop } from "./App";
 import Badge from "react-bootstrap/Badge";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -11,14 +10,14 @@ interface Station {
   stations: [];
 }
 
-function CurrentLocationSched(CurrentLocation: LatLong) {
+function CurrentLocationSched(CurrentLocation: google.maps.LatLngLiteral) {
+  let st: Station = {
+    stations: [],
+  };
+
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const st: Station = {
-    stations: [],
-  };
 
   useEffect(() => {
     const headers = new Headers();
@@ -29,7 +28,7 @@ function CurrentLocationSched(CurrentLocation: LatLong) {
 
     const BASE_URL = "https://api.translink.ca";
 
-    let URL = `${BASE_URL}/rttiapi/v1/stops?apikey=${process.env.REACT_APP_TRANSLINK_API}&lat=${CurrentLocation.lat}&long=${CurrentLocation.long}&radius=500`;
+    let URL = `${BASE_URL}/rttiapi/v1/stops?apikey=${process.env.REACT_APP_TRANSLINK_API}&lat=${CurrentLocation.lat}&long=${CurrentLocation.lng}&radius=500`;
     fetch(URL, { headers })
       .then((response) => response.json())
       .then(setData)
@@ -37,41 +36,30 @@ function CurrentLocationSched(CurrentLocation: LatLong) {
         setLoading(false);
       })
       .catch(setError);
-  }, [CurrentLocation]);
+  }, [CurrentLocation.lat, CurrentLocation.lng]);
 
-  if (loading) return <Spinner animation="grow" />;
+  if (loading) return <Spinner animation="border" />;
   if (error) return <pre>{JSON.stringify(error)}</pre>;
   if (!data) return null;
 
   st.stations = data === undefined ? [] : data;
-
-  return NearbyStations(st.stations);
-  // <NearbyStations stations={data}/>
+  return <NearbyStations {...st.stations} />;
 }
 
 function NearbyStations(stations: []) {
-  const obj = JSON.parse(JSON.stringify(stations));
-  return (
-    <>
-      {" "}
-      {
-        Schedules(obj)
-        // <Schedules busses = {obj}/>
-      }
-    </>
-  );
+  let obj = JSON.parse(JSON.stringify(stations));
+  return <Schedules {...obj} />;
 }
 
 function Schedules(busses: []) {
   let busTimes = [];
-  const stop: Stop = {
-    busStopNumber: "",
-  };
 
   for (let i = 0; i < busses.length; i++) {
     let s = busses[i]["StopNo"];
     let name = busses[i]["Name"];
-    stop.busStopNumber = s;
+    const stop: Stop = {
+      busStopNumber: s,
+    };
 
     busTimes.push(
       <ListGroup.Item
@@ -90,13 +78,12 @@ function Schedules(busses: []) {
             <BsFillPinMapFill style={{ marginRight: 7, marginBottom: 7 }} />
             {name}
           </Badge>
-          {RenderBusses(stop)}
-          {/* <RenderBusses stop={stop}/> */}
+          <RenderBusses busStopNumber={stop.busStopNumber} />
         </div>
       </ListGroup.Item>
     );
   }
-  return busTimes;
+  return <>{busTimes}</>;
 }
 
 export default CurrentLocationSched;

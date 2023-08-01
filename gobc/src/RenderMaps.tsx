@@ -1,65 +1,28 @@
 import "./App.css";
-import { useEffect, useState } from "react";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 
-export type LatLong = {
-  lat: number;
-  long: number;
-};
-
-function CurrentLocation() {
-  const [latlong, setLatlong] = useState({
-    lat: 0.0,
-    long: 0.0,
-  });
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLatlong({
-          lat: Number(position.coords.latitude.toFixed(6)),
-          long: Number(position.coords.longitude.toFixed(6)),
-        });
-      });
-    } else {
-      console.log("geolocation not available");
-    }
-  }, []);
-
-  return RenderGoogleMap(latlong);
-}
-
-export function RenderGoogleMap(latlong: LatLong) {
+export function RenderGoogleMap(spot: google.maps.LatLngLiteral) {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
 
   if (!isLoaded) return <div>loading</div>;
 
-  return Map(latlong);
+  return <Map lat={spot.lat} lng={spot.lng} />;
 }
 
-function Map(latlong: LatLong) {
-  const center = {
-    lat: latlong.lat,
-    lng: latlong.long,
-  };
-
+function Map(latlong: google.maps.LatLngLiteral) {
   return (
     <div>
       <GoogleMap
         zoom={18}
-        center={center}
+        center={latlong}
         mapContainerClassName="map-container"
       >
-        <MarkerF position={center} />
+        <MarkerF position={latlong} />
       </GoogleMap>
     </div>
   );
 }
 
-function RenderMaps() {
-  return <CurrentLocation />;
-}
-
-export default RenderMaps;
+export default RenderGoogleMap;

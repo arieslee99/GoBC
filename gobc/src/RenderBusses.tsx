@@ -7,11 +7,11 @@ import { BsFillArrowRightCircleFill, BsArrowLeftRight } from "react-icons/bs";
 import Badge from "react-bootstrap/Badge";
 
 interface Schedules {
-  busses: []; //JSON array
+  busses: Array<any>; //JSON array
 }
 
 export function GetData(s: Stop) {
-  const scheds: Schedules = {
+  let sh: Schedules = {
     busses: [],
   };
 
@@ -49,23 +49,31 @@ export function GetData(s: Stop) {
   }
 
   //handing undefined
-  scheds.busses = data === undefined ? [] : data;
+  sh.busses = data === undefined ? [] : data;
+  return <Schedule busses={sh.busses} />;
+}
+
+function Schedule(sh: Schedules) {
+  let obj = JSON.parse(JSON.stringify(sh.busses));
+  let s: Schedules = {
+    busses: obj,
+  };
 
   return (
-    //<pre>{JSON.stringify(data, null, 2)}</pre>
-    Schedule(scheds.busses)
+    <ListGroup variant="info">
+      <BusTabs busses={s.busses} />
+    </ListGroup>
   );
 }
 
-function Schedule(scheds: []) {
-  let busses = JSON.parse(JSON.stringify(scheds));
-
-  return <ListGroup variant="info">{BusTabs(busses)}</ListGroup>;
-}
-
-export function BusTabs(busses: []) {
+export function BusTabs(s: Schedules) {
   let busTimes = [];
-  for (let i = 0; i < busses.length; i++) {
+
+  for (let i = 0; i < s.busses.length; i++) {
+    let scheduleArray: Schedules = {
+      busses: s.busses[i]["Schedules"],
+    };
+
     busTimes.push(
       <ListGroup.Item
         key={i}
@@ -74,37 +82,39 @@ export function BusTabs(busses: []) {
       >
         <div className="ms-2 me-auto">
           <div style={{ fontSize: 15 }} className="fw-bold">
-            <h1>{busses[i]["RouteNo"]}</h1>
+            <h1>{s.busses[i]["RouteNo"]}</h1>
 
             <div style={{ padding: "5px" }}>
               <BsFillArrowRightCircleFill style={{ marginRight: 5 }} />
-              {busses[i]["Schedules"][0]["Destination"]}
+              {s.busses[i]["Schedules"][0]["Destination"]}
 
               <Badge
                 style={{ fontSize: 13, marginLeft: "10px", color: "black" }}
                 bg="warning"
                 pill
               >
-                {CalculateTime(busses[i]["Schedules"][0]["ExpectedLeaveTime"])}
+                {calculateTime(
+                  s.busses[i]["Schedules"][0]["ExpectedLeaveTime"]
+                )}
               </Badge>
             </div>
 
             <BsArrowLeftRight style={{ marginRight: 5 }} />
-            {busses[i]["RouteName"]}
+            {s.busses[i]["RouteName"]}
           </div>
-          {Bus(busses[i]["Schedules"])}
+          <Bus busses={scheduleArray.busses} />
         </div>
       </ListGroup.Item>
     );
   }
 
-  return busTimes;
+  return <>{busTimes}</>;
 }
 
-export function Bus(scheduleArray: []) {
+export function Bus(scheduleArray: Schedules) {
   const busTimes = [];
-  for (let i = 0; i < scheduleArray.length; i++) {
-    let str: String = scheduleArray[i]["ExpectedLeaveTime"];
+  for (let i = 0; i < scheduleArray.busses.length; i++) {
+    let str: String = scheduleArray.busses[i]["ExpectedLeaveTime"];
 
     busTimes.push(
       <ListGroup.Item
@@ -122,9 +132,10 @@ export function Bus(scheduleArray: []) {
       {busTimes}
     </ListGroup>
   );
+  // return <>{busTimes}</>;
 }
 
-function CalculateTime(nextBus: string) {
+function calculateTime(nextBus: string) {
   //numbers
   let today = new Date();
   let mins = today.getMinutes();
@@ -187,7 +198,7 @@ function CalculateTime(nextBus: string) {
 }
 
 function RenderBusses(s: Stop) {
-  return GetData(s);
+  return <GetData busStopNumber={s.busStopNumber} />;
 }
 
 export default RenderBusses;

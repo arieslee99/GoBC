@@ -1,14 +1,13 @@
 import "./App.css";
 import RenderBusses from "./RenderBusses";
-import RenderMaps from "./RenderMaps";
+import { RenderGoogleMap } from "./RenderMaps";
 import CurrentLocationSched from "./RenderAutoBusses";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import Button from "react-bootstrap/Button";
-import type { LatLong } from "./RenderMaps";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Stop = {
   busStopNumber: string;
@@ -60,26 +59,41 @@ function ByBusStop() {
           Check Schedule
         </Button>
       </form>
-      {RenderBusses(s)}
+      <RenderBusses busStopNumber={s.busStopNumber} />
     </div>
   );
 }
 
-function SearchOptions() {
+function GetPosition() {
+  const [spot, setSpot] = useState({
+    lat: 0.0,
+    lng: 0.0,
+  });
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setSpot({
+          lat: Number(position.coords.latitude.toFixed(6)),
+          lng: Number(position.coords.longitude.toFixed(6)),
+        });
+      });
+    } else {
+      console.log("geolocation not available");
+    }
+  }, []);
+
+  return (
+    <div>
+      <SearchOptions lat={spot.lat} lng={spot.lng} />
+      <RenderGoogleMap lat={spot.lat} lng={spot.lng} />
+    </div>
+  );
+}
+
+function SearchOptions(spot: google.maps.LatLngLiteral) {
   const [darkmode, setDarkmode] = useState(false);
   const [mode, setMode] = useState("");
-
-  const currentSpot: LatLong = {
-    lat: 0.0,
-    long: 0.0,
-  };
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      currentSpot.lat = Number(position.coords.latitude.toFixed(6));
-      currentSpot.long = Number(position.coords.longitude.toFixed(6));
-    });
-  }
 
   const handleMode = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -124,8 +138,7 @@ function SearchOptions() {
             className="mb-3"
           >
             <Tab eventKey="home" title="Near You">
-              {/* {CurrentLocationSched(currentSpot)} */}
-              {/* <CurrentLocationSched CurrentLocation={location}/> */}
+              <CurrentLocationSched lat={spot.lat} lng={spot.lng} />
             </Tab>
 
             <Tab eventKey="profile" title="Search by Bus Stop">
@@ -140,12 +153,7 @@ function SearchOptions() {
 
 function App() {
   //58624
-  return (
-    <div>
-      <SearchOptions />
-      <RenderMaps />
-    </div>
-  );
+  return <GetPosition />;
 }
 
 export default App;

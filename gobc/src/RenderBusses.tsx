@@ -144,6 +144,7 @@ export function Bus(scheduleArray: Schedules) {
 
 function calculateTime(nextBus: string) {
   //numbers
+  console.log(nextBus);
   let today = new Date();
   let mins = today.getMinutes();
   let hours = today.getHours();
@@ -161,6 +162,10 @@ function calculateTime(nextBus: string) {
     nextBus = nextBus.substring(0, 8);
     nextBusMins = nextBus.substring(3, 5);
     nextBusHours = nextBus.substring(0, 2);
+  } else if (nextBus.length === 17) {
+    nextBus = nextBus.substring(0, 4);
+    nextBusMins = nextBus.substring(2, 4);
+    nextBusHours = nextBus.substring(0, 1);
   } else {
     nextBus = nextBus.substring(0, 7);
     nextBusMins = nextBus.substring(2, 4);
@@ -186,6 +191,7 @@ function calculateTime(nextBus: string) {
     let x = 60 - Math.max(mins, parseInt(nextBusMins));
     diff = x + Math.min(mins, parseInt(nextBusMins));
   }
+  console.log(diff);
   return "Leaving in " + diff + " minutes";
 }
 

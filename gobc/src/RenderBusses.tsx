@@ -102,6 +102,13 @@ export function BusTabs(s: Schedules) {
                   s.busses[i]["Schedules"][0]["ExpectedLeaveTime"]
                 )}
               </Badge>
+              <Badge
+                style={{ fontSize: 13, marginLeft: "10px", color: "white" }}
+                bg="success"
+                pill
+              >
+                {onSchedule(s.busses[i]["Schedules"][0]["ExpectedLeaveTime"])}
+              </Badge>
             </div>
 
             <BsArrowLeftRight style={{ marginRight: 5 }} />
@@ -142,9 +149,50 @@ export function Bus(scheduleArray: Schedules) {
   );
 }
 
+function onSchedule(incoming: string) {
+  //numbers
+  let today = new Date();
+  let mins = today.getMinutes();
+  let hours = today.getHours();
+  let nextBusMins;
+  let nextBusHours;
+
+  //strings
+  let message;
+  if (incoming.length === 18 || incoming.length === 7) {
+    incoming = incoming.substring(0, 8);
+    if (incoming.substring(3, 4) === "0") {
+      nextBusMins = incoming.substring(4, 5);
+    } else {
+      nextBusMins = incoming.substring(3, 5);
+    }
+    nextBusHours = incoming.substring(0, 2);
+  } else if (incoming.length === 17) {
+    incoming = incoming.substring(0, 4);
+    nextBusMins = incoming.substring(2, 4);
+    nextBusHours = incoming.substring(0, 1);
+  } else {
+    incoming = incoming.substring(0, 7);
+    nextBusMins = incoming.substring(2, 4);
+    nextBusHours = incoming.substring(0, 1);
+  }
+
+  let nextBusMinsNum = parseInt(nextBusMins);
+  let nextBusHoursNum = parseInt(nextBusHours);
+  if (
+    (nextBusMinsNum < mins && nextBusHoursNum === hours) ||
+    (nextBusHoursNum < hours && nextBusMinsNum > mins)
+  ) {
+    message = "Late";
+  } else {
+    message = "On time";
+  }
+
+  return message;
+}
+
 function calculateTime(nextBus: string) {
   //numbers
-  console.log(nextBus);
   let today = new Date();
   let mins = today.getMinutes();
   let hours = today.getHours();
@@ -177,9 +225,6 @@ function calculateTime(nextBus: string) {
     nextBusHours = nextBus.substring(0, 1);
   }
 
-  console.log(nextBusHours);
-  console.log(nextBusMins);
-
   let diff;
   if (nextBusHours.toString() === hours.toString()) {
     if (mins.toString()[0] === "0" && nextBusMins[0] === "0") {
@@ -199,7 +244,7 @@ function calculateTime(nextBus: string) {
     let x = 60 - Math.max(mins, parseInt(nextBusMins));
     diff = x + Math.min(mins, parseInt(nextBusMins));
   }
-  console.log(diff);
+
   return "Arriving in " + diff + " minutes";
 }
 

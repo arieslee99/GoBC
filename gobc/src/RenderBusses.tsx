@@ -187,7 +187,6 @@ function onSchedule(incoming: string) {
   } else {
     message = "On time";
   }
-
   return message;
 }
 
@@ -225,6 +224,8 @@ function calculateTime(nextBus: string) {
     nextBusHours = nextBus.substring(0, 1);
   }
 
+  console.log(nextBusHours);
+  console.log(nextBusMins);
   let diff;
   if (nextBusHours.toString() === hours.toString()) {
     if (mins.toString()[0] === "0" && nextBusMins[0] === "0") {

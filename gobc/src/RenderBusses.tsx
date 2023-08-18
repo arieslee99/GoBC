@@ -160,7 +160,12 @@ function calculateTime(nextBus: string) {
 
   if (nextBus.length === 18 || nextBus.length === 7) {
     nextBus = nextBus.substring(0, 8);
-    nextBusMins = nextBus.substring(3, 5);
+    if (nextBus.substring(3, 4) === "0") {
+      nextBusMins = nextBus.substring(4, 5);
+    } else {
+      nextBusMins = nextBus.substring(3, 5);
+    }
+
     nextBusHours = nextBus.substring(0, 2);
   } else if (nextBus.length === 17) {
     nextBus = nextBus.substring(0, 4);
@@ -171,6 +176,9 @@ function calculateTime(nextBus: string) {
     nextBusMins = nextBus.substring(2, 4);
     nextBusHours = nextBus.substring(0, 1);
   }
+
+  console.log(nextBusHours);
+  console.log(nextBusMins);
 
   let diff;
   if (nextBusHours.toString() === hours.toString()) {
@@ -192,7 +200,7 @@ function calculateTime(nextBus: string) {
     diff = x + Math.min(mins, parseInt(nextBusMins));
   }
   console.log(diff);
-  return "Leaving in " + diff + " minutes";
+  return "Arriving in " + diff + " minutes";
 }
 
 function RenderBusses(s: Stop) {

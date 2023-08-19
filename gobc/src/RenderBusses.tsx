@@ -154,6 +154,11 @@ function onSchedule(incoming: string) {
   let today = new Date();
   let mins = today.getMinutes();
   let hours = today.getHours();
+  if (hours > 12) {
+    hours -= 12;
+  } else if (hours === 0) {
+    hours = 12;
+  }
   let nextBusMins;
   let nextBusHours;
 
@@ -177,8 +182,18 @@ function onSchedule(incoming: string) {
     nextBusHours = incoming.substring(0, 1);
   }
 
+  if (nextBusMins[0] === "0") {
+    nextBusMins.substring(1, 2);
+  }
+
   let nextBusMinsNum = parseInt(nextBusMins);
   let nextBusHoursNum = parseInt(nextBusHours);
+
+  console.log(hours);
+  console.log(mins);
+  console.log(incoming + " " + nextBusHoursNum);
+  console.log(incoming + " " + nextBusMinsNum);
+
   if (
     (nextBusMinsNum < mins && nextBusHoursNum === hours) ||
     (nextBusHoursNum < hours && nextBusMinsNum > mins)
@@ -224,8 +239,6 @@ function calculateTime(nextBus: string) {
     nextBusHours = nextBus.substring(0, 1);
   }
 
-  console.log(nextBusHours);
-  console.log(nextBusMins);
   let diff;
   if (nextBusHours.toString() === hours.toString()) {
     if (mins.toString()[0] === "0" && nextBusMins[0] === "0") {

@@ -7,7 +7,7 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import Button from "react-bootstrap/Button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 
 type Stop = {
   busStopNumber: string;
@@ -91,6 +91,19 @@ function GetPosition() {
   );
 }
 
+function AutoResize() {
+  const [size, setSize] = useState([0, 0]);
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+  return size;
+}
+
 function SearchOptions(spot: google.maps.LatLngLiteral) {
   const [darkmode, setDarkmode] = useState(false);
   const [mode, setMode] = useState("");
@@ -153,6 +166,7 @@ function SearchOptions(spot: google.maps.LatLngLiteral) {
 
 function App() {
   //58624
+
   return <GetPosition />;
 }
 
